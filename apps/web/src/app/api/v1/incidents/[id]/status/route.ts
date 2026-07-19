@@ -5,7 +5,7 @@ import { apiError } from '@/lib/api-error';
 
 export async function PATCH(req: NextRequest, { params }: any) {
   try {
-    const ctx = getAuthContext(null as any);
+    const ctx = await getAuthContext();
     const { id } = await params;
     const body = await req.json();
     const result = await updateIncidentStatus(ctx, id, body.status, body.notes);

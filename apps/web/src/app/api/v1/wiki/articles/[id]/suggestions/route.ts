@@ -5,7 +5,7 @@ import { apiError } from '@/lib/api-error';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const ctx = getAuthContext(req);
+    const ctx = await getAuthContext(req);
     const { id } = await params;
     const result = await getArticleSuggestions(ctx, id);
     if (!result.ok) {
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const ctx = getAuthContext(req);
+    const ctx = await getAuthContext(req);
     const { id } = await params;
     const body = await req.json().catch(() => null);
     if (!body || !body.content) {

@@ -6,7 +6,7 @@ import { apiError } from '@/lib/api-error';
 
 export async function POST(req: NextRequest) {
   try {
-    const ctx = getAuthContext(req);
+    const ctx = await getAuthContext(req);
     const body = await req.json().catch(() => null);
     if (!body) {
       return apiError(400, 'invalid_json', 'Request body must be valid JSON.');
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
-    const ctx = getAuthContext(req);
+    const ctx = await getAuthContext(req);
     const { searchParams } = new URL(req.url);
     const input = {
       status: searchParams.get('status') ?? undefined,

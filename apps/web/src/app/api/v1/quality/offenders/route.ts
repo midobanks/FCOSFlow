@@ -5,7 +5,7 @@ import { apiError } from '@/lib/api-error';
 
 export async function GET() {
   try {
-    const ctx = getAuthContext(null as any);
+    const ctx = await getAuthContext();
     const result = await getTopOffenders(ctx);
     if (!result.ok) return apiError(400, result.error.code, result.error.message);
     return NextResponse.json({ ok: true, data: result.data });

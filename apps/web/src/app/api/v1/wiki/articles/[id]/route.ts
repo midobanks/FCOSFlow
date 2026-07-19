@@ -6,7 +6,7 @@ import { apiError } from '@/lib/api-error';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const ctx = getAuthContext(req);
+    const ctx = await getAuthContext(req);
     const { id } = await params;
 
     const { searchParams } = new URL(req.url);
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const ctx = getAuthContext(req);
+    const ctx = await getAuthContext(req);
     const { id } = await params;
 
     const body = await req.json().catch(() => null);
@@ -55,7 +55,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const ctx = getAuthContext(req);
+    const ctx = await getAuthContext(req);
     const { id } = await params;
 
     const result = await deleteArticle(ctx, id);

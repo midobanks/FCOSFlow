@@ -5,7 +5,7 @@ import { apiError } from '@/lib/api-error';
 
 export async function GET() {
   try {
-    const ctx = getAuthContext(null as any);
+    const ctx = await getAuthContext();
 
     const [totalArticles, publishedArticles, inReviewArticles] = await Promise.all([
       prisma.article.count({ where: { organizationId: ctx.organizationId } }),

@@ -5,7 +5,7 @@ import { apiError } from '@/lib/api-error';
 
 export async function GET() {
   try {
-    const ctx = getAuthContext(null as any);
+    const ctx = await getAuthContext();
     const result = await listIncidents(ctx);
     if (!result.ok) return apiError(400, result.error.code, result.error.message);
     return NextResponse.json({ ok: true, data: result.data });
@@ -14,7 +14,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const ctx = getAuthContext(null as any);
+    const ctx = await getAuthContext();
     const body = await req.json();
     const result = await createIncident(ctx, body);
     if (!result.ok) return apiError(400, result.error.code, result.error.message);

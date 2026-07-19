@@ -5,7 +5,7 @@ import { apiError } from '@/lib/api-error';
 
 export async function GET() {
   try {
-    const ctx = getAuthContext(null as any);
+    const ctx = await getAuthContext();
     const result = await getHandoversBySite(ctx);
     if (!result.ok) {
       return apiError(400, result.error.code, result.error.message);
@@ -19,7 +19,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const ctx = getAuthContext(null as any);
+    const ctx = await getAuthContext();
     const body = await req.json().catch(() => null);
     if (!body || !body.shiftId) {
       return apiError(400, 'invalid_input', 'shiftId is required.');

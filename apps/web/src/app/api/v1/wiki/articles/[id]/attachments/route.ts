@@ -7,7 +7,7 @@ const MAX_SIZE = 10 * 1024 * 1024;
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const ctx = getAuthContext(req);
+    const ctx = await getAuthContext(req);
     const { id } = await params;
 
     const formData = await req.formData().catch(() => null);

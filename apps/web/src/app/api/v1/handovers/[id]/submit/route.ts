@@ -5,7 +5,7 @@ import { apiError } from '@/lib/api-error';
 
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const ctx = getAuthContext(null as any);
+    const ctx = await getAuthContext();
     const { id } = await params;
     const result = await submitHandover(ctx, id);
     if (!result.ok) {

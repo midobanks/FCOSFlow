@@ -5,7 +5,7 @@ import { apiError } from '@/lib/api-error';
 
 export async function GET(req: NextRequest) {
   try {
-    const ctx = getAuthContext(req);
+    const ctx = await getAuthContext(req);
     const { searchParams } = new URL(req.url);
     const code = searchParams.get('code');
 

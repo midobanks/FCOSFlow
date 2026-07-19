@@ -6,6 +6,8 @@
     "packages/*"
   ],
   "scripts": {
+    "db:generate": "cd packages/database && npx prisma generate",
+    "vercel-build": "npm run db:generate && turbo build",
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",

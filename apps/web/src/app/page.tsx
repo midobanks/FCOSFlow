@@ -113,12 +113,12 @@ export default function HomePage() {
             <div>
               <label className="text-xs font-medium text-neutral-600">Shift start</label>
               <input type="time" value={inputs.startTime} onChange={(e) => set('startTime', e.target.value)}
-                className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" />
+                className="mt-1 block w-full min-w-0 rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" />
             </div>
             <div>
               <label className="text-xs font-medium text-neutral-600">Shift end</label>
               <input type="time" value={inputs.endTime} onChange={(e) => set('endTime', e.target.value)}
-                className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" />
+                className="mt-1 block w-full min-w-0 rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" />
             </div>
           </div>
 

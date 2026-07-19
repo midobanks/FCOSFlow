@@ -96,7 +96,7 @@ export default function HomePage() {
         <div className="space-y-4 rounded-lg border border-neutral-200 bg-white p-5">
           <h2 className="text-sm font-semibold text-neutral-700">Shift parameters</h2>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-medium text-neutral-600">Order lines</label>
               <input type="number" min="1" value={inputs.orderLines} onChange={(e) => set('orderLines', e.target.value)}
@@ -109,7 +109,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-medium text-neutral-600">Shift start</label>
               <input type="time" value={inputs.startTime} onChange={(e) => set('startTime', e.target.value)}
@@ -122,7 +122,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-medium text-neutral-600">Break (min)</label>
               <input type="number" min="0" value={inputs.breakMinutes} onChange={(e) => set('breakMinutes', e.target.value)}
@@ -135,7 +135,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-medium text-neutral-600">Target speed (lines/hr)</label>
               <input type="number" min="1" step="0.1" value={inputs.targetSpeed} onChange={(e) => set('targetSpeed', e.target.value)}

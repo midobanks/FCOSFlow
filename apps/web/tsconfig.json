@@ -1,0 +1,54 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "incremental": true,
+    "noEmit": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@fcos/domain": [
+        "../../packages/domain/src"
+      ],
+      "@fcos/application": [
+        "../../packages/application/src"
+      ],
+      "@fcos/database": [
+        "../../packages/database/src"
+      ],
+      "@fcos/auth": [
+        "../../packages/auth/src"
+      ],
+      "@fcos/ui": [
+        "../../packages/ui/src"
+      ],
+      "@fcos/contracts": [
+        "../../packages/contracts/src"
+      ],
+      "@fcos/observability": [
+        "../../packages/observability/src"
+      ],
+      "@fcos/config": [
+        "../../packages/config/src"
+      ],
+      "@fcos/test-support": [
+        "../../packages/test-support/src"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

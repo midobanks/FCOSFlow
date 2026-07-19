@@ -1,0 +1,36 @@
+{
+  "name": "fc-os-flow",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\""
+  },
+  "devDependencies": {
+    "eslint": "^10.7.0",
+    "prettier": "^3.5.0",
+    "prettier-plugin-tailwindcss": "^0.6.0",
+    "turbo": "^2.5.0",
+    "typescript": "^5.8.0",
+    "vitest": "^4.1.10"
+  },
+  "packageManager": "npm@11.12.1",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@tiptap/extension-placeholder": "^3.28.0",
+    "@tiptap/pm": "^3.28.0",
+    "@tiptap/react": "^3.28.0",
+    "@tiptap/starter-kit": "^3.28.0"
+  }
+}

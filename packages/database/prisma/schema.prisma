@@ -1,0 +1,504 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleName {
+  ADMIN
+  FC_LEAD
+  SUPERVISOR
+  CAPTAIN
+  QUALITY_LEAD
+  PROCESS_OWNER
+  TRAINER
+  AUDITOR
+  CENTRAL_OPS
+  SHOPPER
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sites             Site[]
+  users             User[]
+  articles          Article[]
+  incidents         Incident[]
+  qualityObservations QualityObservation[]
+  frameCounts       FrameCount[]
+  coldChainWorkflows ColdChainWorkflow[]
+  coldChainScans    ColdChainScan[]
+  improvements      Improvement[]
+}
+
+model Site {
+  id             String       @id @default(cuid())
+  organizationId String
+  name           String
+  code           String
+  timezone       String       @default("Europe/Berlin")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  teams          Team[]
+  shifts             Shift[]
+  handovers          ShiftHandover[]
+  articles           Article[]
+  incidents          Incident[]
+  qualityObservations QualityObservation[]
+  frameCounts        FrameCount[]
+  coldChainScans     ColdChainScan[]
+  improvements       Improvement[]
+
+  @@unique([organizationId, code])
+  @@index([organizationId])
+}
+
+model Team {
+  id        String   @id @default(cuid())
+  siteId    String
+  name      String
+  processArea String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  site      Site     @relation(fields: [siteId], references: [id])
+  userTeams UserTeam[]
+
+  @@index([siteId])
+}
+
+model Role {
+  id       String     @id @default(cuid())
+  name     RoleName   @unique
+  label    String
+
+  users    UserRole[]
+}
+
+model User {
+  id             String       @id @default(cuid())
+  organizationId String
+  email          String       @unique
+  name           String?
+  authProviderId String?
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  roles           UserRole[]
+  teamMemberships UserTeam[]
+  ownedArticles     Article[]
+  articleVersions   ArticleVersion[]
+  acknowledgements  ArticleAcknowledgement[]
+  suggestions       ArticleSuggestion[]
+  outgoingHandovers  ShiftHandover[]          @relation("outgoingUser")
+  incomingHandovers  ShiftHandover[]          @relation("incomingUser")
+  handoverAmendments ShiftHandoverAmendment[]
+  ownedIncidents     Incident[]               @relation("incidentOwner")
+  ownedIncidentActions IncidentAction[]
+  qualityObservations QualityObservation[]
+  frameCounts        FrameCount[]
+  coldChainScans     ColdChainScan[]
+  ownedImprovements  Improvement[] @relation("improvementOwner")
+
+  @@index([organizationId])
+  @@index([email])
+}
+
+model UserRole {
+  userId String
+  roleId String
+  siteId String?
+
+  user   User @relation(fields: [userId], references: [id])
+  role   Role @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
+}
+
+model UserTeam {
+  userId String
+  teamId String
+
+  user   User @relation(fields: [userId], references: [id])
+  team   Team @relation(fields: [teamId], references: [id])
+
+  @@id([userId, teamId])
+}
+
+enum ArticleType {
+  SOP
+  PROCESS
+  FAQ
+  TEMPLATE
+  TRAINING_GUIDE
+  POLICY
+  CHECKLIST
+  TROUBLESHOOTING
+  QUICK_REFERENCE
+}
+
+enum ProcessArea {
+  RECEIPT
+  PICKING
+  STOCKFLOW
+  TRUNKING
+  INFLOW
+}
+
+enum ArticleStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  SUPERSEDED
+  ARCHIVED
+}
+
+enum GovernanceLevel {
+  LOCAL
+  SITE
+  NETWORK
+}
+
+model Article {
+  id               String         @id @default(cuid())
+  organizationId   String
+  siteId           String?
+  title            String
+  slug             String
+  summary          String?
+  articleType      ArticleType
+  processArea      ProcessArea?
+  status           ArticleStatus  @default(DRAFT)
+  governanceLevel  GovernanceLevel @default(LOCAL)
+  ownerId          String
+  language         String         @default("en")
+  relatedArticleId String?
+  effectiveDate    DateTime?
+  reviewDate       DateTime?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  organization     Organization   @relation(fields: [organizationId], references: [id])
+  site             Site?          @relation(fields: [siteId], references: [id])
+  owner            User           @relation(fields: [ownerId], references: [id])
+  versions         ArticleVersion[]
+  acknowledgements ArticleAcknowledgement[]
+  suggestions      ArticleSuggestion[]
+  incidents        Incident[]
+
+  @@unique([organizationId, slug])
+  @@index([organizationId, status])
+  @@index([organizationId, siteId])
+}
+
+model ArticleVersion {
+  id           String       @id @default(cuid())
+  articleId    String
+  version      Int
+  content      Json
+  changeNotes  String?
+  status       ArticleStatus
+  createdById  String
+  createdAt    DateTime     @default(now())
+
+  article      Article      @relation(fields: [articleId], references: [id])
+  createdBy    User         @relation(fields: [createdById], references: [id])
+
+  @@unique([articleId, version])
+  @@index([articleId])
+}
+
+model ArticleAcknowledgement {
+  id          String    @id @default(cuid())
+  articleId   String
+  userId      String
+  version     Int
+  completedAt DateTime?
+
+  article     Article   @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@unique([articleId, userId])
+}
+
+model ArticleSuggestion {
+  id        String   @id @default(cuid())
+  articleId String
+  userId    String
+  content   Json
+  status    String   @default("OPEN")
+  createdAt DateTime @default(now())
+
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([articleId])
+}
+
+model Shift {
+  id        String   @id @default(cuid())
+  siteId    String
+  name      String
+  startTime DateTime
+  endTime   DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  site     Site             @relation(fields: [siteId], references: [id])
+  handovers ShiftHandover[]
+
+  @@index([siteId])
+}
+
+model ShiftHandover {
+  id             String   @id @default(cuid())
+  shiftId        String
+  siteId         String
+  outgoingUserId String
+  incomingUserId String?
+  notes          String?
+  riskSummary    String?
+  priorityActions String?
+  status         String   @default("PENDING")
+  submittedAt    DateTime?
+  acknowledgedAt DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  shift          Shift    @relation(fields: [shiftId], references: [id])
+  site           Site     @relation(fields: [siteId], references: [id])
+  outgoingUser   User     @relation("outgoingUser", fields: [outgoingUserId], references: [id])
+  incomingUser   User?    @relation("incomingUser", fields: [incomingUserId], references: [id])
+  amendments     ShiftHandoverAmendment[]
+
+  @@index([shiftId])
+  @@index([siteId])
+}
+
+model ShiftHandoverAmendment {
+  id         String   @id @default(cuid())
+  handoverId String
+  userId     String
+  content    String
+  createdAt  DateTime @default(now())
+
+  handover   ShiftHandover @relation(fields: [handoverId], references: [id], onDelete: Cascade)
+  user       User          @relation(fields: [userId], references: [id])
+
+  @@index([handoverId])
+}
+
+enum IncidentType {
+  LTI
+  NM
+  PHI
+  MI
+}
+
+enum IncidentStatus {
+  OPEN
+  CONTAINED
+  INVESTIGATING
+  MONITORING
+  RESOLVED
+  CLOSED
+}
+
+model Incident {
+  id               String          @id @default(cuid())
+  organizationId   String
+  siteId           String?
+  incidentType     IncidentType
+  submittedBy      String
+  injuredPersonName String?
+  description      String?
+  ambulanceOnSite  Boolean         @default(false)
+  finishedShift    Boolean?
+  status           IncidentStatus  @default(OPEN)
+  ownerId          String
+  dueTime          DateTime?
+  articleId        String?
+  closureNotes     String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  organization     Organization    @relation(fields: [organizationId], references: [id])
+  site             Site?           @relation(fields: [siteId], references: [id])
+  owner            User            @relation("incidentOwner", fields: [ownerId], references: [id])
+  article          Article?        @relation(fields: [articleId], references: [id])
+  actions          IncidentAction[]
+  qualityObservations QualityObservation[]
+  improvements     Improvement[]
+
+  @@index([organizationId, status])
+  @@index([organizationId, incidentType])
+}
+
+model IncidentAction {
+  id          String   @id @default(cuid())
+  incidentId  String
+  description String
+  ownerId     String
+  completed   Boolean  @default(false)
+  dueTime     DateTime?
+  createdAt   DateTime @default(now())
+
+  incident    Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  owner       User     @relation(fields: [ownerId], references: [id])
+
+  @@index([incidentId])
+}
+
+enum IssueType {
+  FRESHNESS
+  DAMAGE
+  LABELING
+  PACKAGING
+  WEIGHT
+  CONTAMINATION
+  OTHER
+}
+
+model QualityObservation {
+  id             String    @id @default(cuid())
+  organizationId String
+  siteId         String?
+  sku            String
+  location       String?
+  issueType      IssueType
+  severity       String
+  quantity       Int       @default(1)
+  description    String?
+  photoUrl       String?
+  incidentId     String?
+  reslotRequested Boolean  @default(false)
+  reslotCompleted Boolean  @default(false)
+  observedById   String
+  createdAt      DateTime  @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  site           Site?        @relation(fields: [siteId], references: [id])
+  observedBy     User         @relation(fields: [observedById], references: [id])
+  incident       Incident?    @relation(fields: [incidentId], references: [id])
+
+  @@index([organizationId, sku])
+  @@index([organizationId, issueType])
+}
+
+model FrameType {
+  id         String @id @default(cuid())
+  name       String
+  code       String
+  capacity   Int
+  isActive   Boolean @default(true)
+  counts     FrameCount[]
+}
+
+model FrameCount {
+  id          String   @id @default(cuid())
+  organizationId String
+  siteId      String?
+  frameTypeId String
+  fullCount   Int      @default(0)
+  looseCount  Int      @default(0)
+  damagedCount Int     @default(0)
+  reservedCount Int    @default(0)
+  unavailableCount Int @default(0)
+  demand      Int?
+  safetyBuffer Int?
+  notes       String?
+  countedById String
+  countedAt   DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  site         Site?        @relation(fields: [siteId], references: [id])
+  frameType    FrameType    @relation(fields: [frameTypeId], references: [id])
+  countedBy    User         @relation(fields: [countedById], references: [id])
+
+  @@index([organizationId, countedAt])
+}
+
+model ColdChainWorkflow {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  steps          ColdChainStep[]
+}
+
+model ColdChainStep {
+  id          String   @id @default(cuid())
+  workflowId  String
+  stepOrder   Int
+  label       String
+  description String?
+  responsibleRole String?
+
+  workflow    ColdChainWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@unique([workflowId, stepOrder])
+}
+
+model ColdChainScan {
+  id          String   @id @default(cuid())
+  organizationId String
+  siteId      String?
+  stepId      String
+  userId      String
+  deviceId    String?
+  shipmentRef String?
+  location    String?
+  temperature Decimal?
+  scannedAt   DateTime @default(now())
+  notes       String?
+  isManual    Boolean  @default(false)
+  approvedById String?
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  site         Site?        @relation(fields: [siteId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+
+  @@index([organizationId, scannedAt])
+}
+
+model Improvement {
+  id              String   @id @default(cuid())
+  organizationId  String
+  siteId          String?
+  title           String
+  problem         String
+  proposedChange  String
+  expectedImpact  String?
+  ownerId         String
+  status          String   @default("OPEN")
+  baseline        String?
+  target          String?
+  result          String?
+  benefitVerified Boolean  @default(false)
+  relatedIncidentId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  organization    Organization    @relation(fields: [organizationId], references: [id])
+  site            Site?           @relation(fields: [siteId], references: [id])
+  owner           User            @relation("improvementOwner", fields: [ownerId], references: [id])
+  relatedIncident Incident?       @relation(fields: [relatedIncidentId], references: [id])
+
+  @@index([organizationId, status])
+}

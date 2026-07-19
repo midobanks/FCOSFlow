@@ -1,0 +1,22 @@
+{
+  "name": "@fcos/auth",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fcos/database": "*",
+    "@fcos/contracts": "*",
+    "@fcos/config": "*",
+    "next": "^15.3.0",
+    "next-auth": "^5.0.0-beta.25"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "@types/node": "^22.0.0"
+  }
+}

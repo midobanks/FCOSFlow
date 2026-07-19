@@ -11,7 +11,8 @@
   "dependencies": {
     "@fcos/domain": "*",
     "@fcos/contracts": "*",
-    "@fcos/database": "*"
+    "@fcos/database": "*",
+    "@prisma/client": "^6.6.0"
   },
   "devDependencies": {
     "typescript": "^5.8.0"

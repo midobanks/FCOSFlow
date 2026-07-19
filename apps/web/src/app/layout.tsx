@@ -10,8 +10,17 @@ export const metadata: Metadata = {
   },
   description: 'Run every shift with confidence.',
   icons: {
-    icon: '/logo.png',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/logo.png', type: 'image/png' },
+    ],
     apple: '/logo.png',
+  },
+  openGraph: {
+    title: 'FCOS Flow',
+    description: 'Run every shift with confidence.',
+    siteName: 'FCOS Flow',
+    images: [{ url: '/logo.png', width: 256, height: 256 }],
   },
 };
 

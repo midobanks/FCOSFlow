@@ -96,8 +96,8 @@ export async function getAcknowledgementStatus(
 
   return success({
     assigned: records.length,
-    completed: records.filter((r) => r.completedAt).length,
-    users: records.map((r) => ({
+    completed: records.filter((r: any) => r.completedAt).length,
+    users: records.map((r: any) => ({
       id: r.user.id,
       name: r.user.name,
       email: r.user.email,

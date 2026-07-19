@@ -1,0 +1,7 @@
+{
+  "name": "fcos-flow",
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install"
+}

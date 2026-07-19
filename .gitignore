@@ -1,6 +1,7 @@
 node_modules/
 .next/
 dist/
+.turbo/
 *.tsbuildinfo
 .env
 .env.local
@@ -9,3 +10,5 @@ dist/
 .env.production.local
 *.log
 .DS_Store
+
+.vercel

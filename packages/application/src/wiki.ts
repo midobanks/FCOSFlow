@@ -1,13 +1,8 @@
 import { prisma } from '@fcos/database';
-import { Prisma } from '@prisma/client';
 import { canTransition, type ArticleSnapshot, type ArticleVersionSnapshot } from '@fcos/domain';
 import type { CreateArticleInput, UpdateArticleInput } from '@fcos/contracts';
 import type { Result } from '@fcos/contracts';
 import { error, success } from '@fcos/contracts';
-
-function toJsonValue(content: Record<string, unknown>): Prisma.InputJsonValue {
-  return content as Prisma.InputJsonValue;
-}
 
 function slugify(title: string): string {
   return title
@@ -79,7 +74,7 @@ export async function createArticle(
       versions: {
         create: {
           version: 1,
-          content: toJsonValue(input.content),
+          content: input.content as any,
           status: 'DRAFT',
           createdById: ctx.userId,
         },
@@ -124,7 +119,7 @@ export async function updateArticle(
       versions: {
         create: {
           version: nextVersion,
-          content: input.content ? toJsonValue(input.content) : (latestVersion?.content ?? {}),
+          content: input.content ? (input.content as any) : (latestVersion?.content ?? {}),
           changeNotes: input.changeNotes ?? null,
           status: 'DRAFT',
           createdById: ctx.userId,

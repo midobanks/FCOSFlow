@@ -26,7 +26,7 @@ export async function createFrameCount(ctx: AuthContext, input: any): Promise<Re
 export async function getLatestFrameCounts(ctx: AuthContext): Promise<Result<any>> {
   const types = await prisma.frameType.findMany({ where: { isActive: true } });
   const counts = await Promise.all(
-    types.map(async (type) => {
+    types.map(async (type: any) => {
       const latest = await prisma.frameCount.findFirst({
         where: { organizationId: ctx.organizationId, frameTypeId: type.id },
         orderBy: { countedAt: 'desc' },

@@ -36,7 +36,7 @@ export const createArticleSchema = z.object({
   articleType: articleTypeEnum,
   processArea: processAreaEnum.optional(),
   governanceLevel: governanceLevelEnum.optional().default('LOCAL'),
-  content: z.record(z.unknown()),
+  content: z.any(),
   language: z.string().length(2).optional().default('en'),
   siteId: z.string().optional(),
 });

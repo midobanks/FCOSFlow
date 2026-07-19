@@ -1,4 +1,5 @@
 import { SearchField } from '@/components/SearchField';
+import { getBaseUrl } from '@/lib/base-url';
 import { ArticleCard } from '@/components/ArticleCard';
 
 type SearchResult = {
@@ -18,7 +19,7 @@ type SearchResult = {
 
 async function searchArticles(q: string): Promise<SearchResult[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/v1/wiki/search?q=${encodeURIComponent(q)}&limit=50`, {
       cache: 'no-store',
     });
@@ -65,3 +66,4 @@ export default async function SearchPage({
     </div>
   );
 }
+

@@ -1,11 +1,12 @@
 import Link from 'next/link';
+import { getBaseUrl } from '@/lib/base-url';
 
 type Incident = { id: string; incidentType: string; submittedBy: string; injuredPersonName: string | null; status: string; createdAt: string; ambulanceOnSite: boolean; finishedShift: boolean | null };
 type Dashboard = { total: number; types: Record<string, number>; statuses: Record<string, number>; month: string };
 
 async function getIncidents() {
   try {
-    const res = await fetch('http://localhost:3000/api/v1/incidents', { cache: 'no-store' });
+    const res = await fetch(`${getBaseUrl()}/api/v1/incidents`, { cache: 'no-store' });
     const json = await res.json();
     return json.ok ? json.data : [];
   } catch { return []; }
@@ -13,7 +14,7 @@ async function getIncidents() {
 
 async function getDashboard() {
   try {
-    const res = await fetch('http://localhost:3000/api/v1/incidents/dashboard', { cache: 'no-store' });
+    const res = await fetch(`${getBaseUrl()}/api/v1/incidents/dashboard`, { cache: 'no-store' });
     const json = await res.json();
     return json.ok ? json.data : null;
   } catch { return null; }

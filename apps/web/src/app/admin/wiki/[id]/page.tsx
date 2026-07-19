@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ApprovalBadge, ArticleMetadataStrip } from '@fcos/ui';
 import type { ApprovalBadgeStatus } from '@fcos/ui';
 import { requireAdmin } from '@/lib/require-admin';
+import { getBaseUrl } from '@/lib/base-url';
 
 type Version = {
   id: string;
@@ -33,8 +34,7 @@ type ArticleData = {
 
 async function getArticle(id: string): Promise<ArticleData | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/v1/wiki/articles/${id}`, { cache: 'no-store' });
+    const res = await fetch(`${getBaseUrl()}/api/v1/wiki/articles/${id}`, { cache: 'no-store' });
     const json = await res.json();
     return json.ok ? json.data : null;
   } catch {
@@ -44,8 +44,7 @@ async function getArticle(id: string): Promise<ArticleData | null> {
 
 async function getVersions(id: string): Promise<Version[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/v1/wiki/articles/${id}/versions`, { cache: 'no-store' });
+    const res = await fetch(`${getBaseUrl()}/api/v1/wiki/articles/${id}/versions`, { cache: 'no-store' });
     const json = await res.json();
     return json.ok ? json.data : [];
   } catch {

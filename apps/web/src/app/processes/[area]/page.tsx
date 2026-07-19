@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArticleCard } from '@/components/ArticleCard';
+import { getBaseUrl } from '@/lib/base-url';
 
 const areaNames: Record<string, { title: string; sections: string[] }> = {
   receipt: {
@@ -27,7 +28,7 @@ const areaNames: Record<string, { title: string; sections: string[] }> = {
 
 async function getProcessArticles(area: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/v1/wiki/articles?limit=100`, { cache: 'no-store' });
     const json = await res.json();
     if (!json.ok) return [];

@@ -4,6 +4,7 @@ import { SiteHeader } from '@/components/SiteHeader';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://fcos-flow.vercel.app'),
   title: {
     default: 'FCOS Flow',
     template: '%s | FCOS Flow',

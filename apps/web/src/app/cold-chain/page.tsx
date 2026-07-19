@@ -1,6 +1,8 @@
+import { getBaseUrl } from '@/lib/base-url';
+
 async function getWorkflows() {
   try {
-    const res = await fetch('http://localhost:3000/api/v1/cold-chain/workflows', { cache: 'no-store' });
+    const res = await fetch(`${getBaseUrl()}/api/v1/cold-chain/workflows`, { cache: 'no-store' });
     const json = await res.json();
     return json.ok ? json.data : [];
   } catch { return []; }

@@ -1,8 +1,9 @@
 import Link from 'next/link';
+import { getBaseUrl } from '@/lib/base-url';
 
 async function getOffenders() {
   try {
-    const res = await fetch('http://localhost:3000/api/v1/quality/offenders', { cache: 'no-store' });
+    const res = await fetch(`${getBaseUrl()}/api/v1/quality/offenders`, { cache: 'no-store' });
     const json = await res.json();
     return json.ok ? json.data : [];
   } catch { return []; }

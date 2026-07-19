@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getBaseUrl } from '@/lib/base-url';
 
 type Ack = {
   article: { id: string; title: string };
@@ -8,7 +9,7 @@ type Ack = {
 
 async function getAcknowledgements(): Promise<Ack[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/v1/wiki/acknowledgements`, { cache: 'no-store' });
     const json = await res.json();
     return json.ok ? json.data : [];
@@ -58,3 +59,4 @@ export default async function AcknowledgementsPage() {
     </div>
   );
 }
+

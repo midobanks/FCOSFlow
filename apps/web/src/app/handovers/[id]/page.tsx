@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { getBaseUrl } from '@/lib/base-url';
 
 type Amendment = {
   id: string;
@@ -24,7 +25,7 @@ type Handover = {
 
 async function getHandover(id: string): Promise<Handover | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/v1/handovers/${id}`, { cache: 'no-store' });
     const json = await res.json();
     return json.ok ? json.data : null;

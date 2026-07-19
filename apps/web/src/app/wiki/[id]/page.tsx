@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { ApprovalBadge, ArticleMetadataStrip } from '@fcos/ui';
 import type { ApprovalBadgeStatus } from '@fcos/ui';
 import { RichTextDisplay } from '@/components/RichTextDisplay';
+import { getBaseUrl } from '@/lib/base-url';
 
 type ArticleData = {
   article: {
@@ -33,7 +34,7 @@ type ArticleData = {
 
 async function getArticle(id: string): Promise<ArticleData | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/v1/wiki/articles/${id}`, { cache: 'no-store' });
     const json = await res.json();
     return json.ok ? json.data : null;

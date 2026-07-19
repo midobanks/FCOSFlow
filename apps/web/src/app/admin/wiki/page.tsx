@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getBaseUrl } from '@/lib/base-url';
 import { ApprovalBadge } from '@fcos/ui';
 import type { ApprovalBadgeStatus } from '@fcos/ui';
 import { requireAdmin } from '@/lib/require-admin';
@@ -20,7 +21,7 @@ type Article = {
 
 async function getArticles(): Promise<Article[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/v1/wiki/articles?limit=100`, { cache: 'no-store' });
     const json = await res.json();
     return json.ok ? json.data.articles : [];
@@ -113,3 +114,4 @@ export default async function AdminWikiPage() {
     </div>
   );
 }
+

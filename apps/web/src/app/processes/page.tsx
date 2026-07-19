@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getBaseUrl } from '@/lib/base-url';
 
 const processAreas = [
   { id: 'RECEIPT', title: 'Receipt', description: 'Inbound goods receipt, verification, and staging', count: 0 },
@@ -10,7 +11,7 @@ const processAreas = [
 
 async function getProcessCounts(): Promise<Record<string, number>> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/v1/wiki/articles?limit=200`, { cache: 'no-store' });
     const json = await res.json();
     if (!json.ok) return {};
@@ -58,3 +59,4 @@ export default async function ProcessesPage() {
     </div>
   );
 }
+

@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { getBaseUrl } from '@/lib/base-url';
 
 async function getIncident(id: string) {
   try {
-    const res = await fetch(`http://localhost:3000/api/v1/incidents/${id}`, { cache: 'no-store' });
+    const res = await fetch(`${getBaseUrl()}/api/v1/incidents/${id}`, { cache: 'no-store' });
     const json = await res.json();
     return json.ok ? json.data : null;
   } catch { return null; }

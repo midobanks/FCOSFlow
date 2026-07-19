@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getBaseUrl } from '@/lib/base-url';
 import { MetricCard } from '@/components/MetricCard';
 
 type Tile = {
@@ -18,7 +19,7 @@ type DashboardData = {
 
 async function getDashboard(): Promise<DashboardData | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/v1/command-center`, { cache: 'no-store' });
     const json = await res.json();
     return json.ok ? json.data : null;
@@ -74,3 +75,4 @@ export default async function CommandCenterPage() {
     </div>
   );
 }
+

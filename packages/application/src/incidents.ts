@@ -5,21 +5,33 @@ import type { Result } from '@fcos/contracts';
 type AuthContext = { userId: string; organizationId: string; roles: string[] };
 
 export async function createIncident(ctx: AuthContext, input: any): Promise<Result<any>> {
-  const incident = await prisma.incident.create({
-    data: {
-      organizationId: ctx.organizationId,
-      incidentType: input.incidentType,
-      submittedBy: input.submittedBy,
-      injuredPersonName: input.injuredPersonName ?? null,
-      description: input.description ?? null,
-      ambulanceOnSite: input.ambulanceOnSite ?? false,
-      finishedShift: input.finishedShift ?? null,
-      status: 'OPEN',
-      ownerId: ctx.userId,
-      dueTime: input.dueTime ? new Date(input.dueTime) : null,
-    },
-  });
-  return success(incident);
+  if (!input.incidentType || !['LTI', 'NM', 'PHI', 'MI'].includes(input.incidentType)) {
+    return error('invalid_input', 'Invalid incident type.');
+  }
+  if (!input.submittedBy) {
+    return error('invalid_input', 'Submitted by is required.');
+  }
+
+  try {
+    const incident = await prisma.incident.create({
+      data: {
+        organizationId: ctx.organizationId,
+        incidentType: input.incidentType,
+        submittedBy: input.submittedBy,
+        injuredPersonName: input.injuredPersonName ?? null,
+        description: input.description ?? null,
+        ambulanceOnSite: input.ambulanceOnSite ?? false,
+        finishedShift: input.finishedShift ?? null,
+        status: 'OPEN',
+        ownerId: ctx.userId,
+        dueTime: input.dueTime ? new Date(input.dueTime) : null,
+      },
+    });
+    return success(incident);
+  } catch (e) {
+    const message = e instanceof Error ? e.message : 'Failed to save incident.';
+    return error('db_error', message);
+  }
 }
 
 export async function getIncident(ctx: AuthContext, id: string): Promise<Result<any>> {

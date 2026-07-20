@@ -12,10 +12,12 @@ export default function NewIncidentPage() {
   const [ambulanceOnSite, setAmbulanceOnSite] = useState(false);
   const [finishedShift, setFinishedShift] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
+    setError('');
 
     try {
       const res = await fetch('/api/v1/incidents', {
@@ -35,9 +37,11 @@ export default function NewIncidentPage() {
       if (json.ok) {
         router.push('/incidents');
         router.refresh();
+      } else {
+        setError(json.error?.message ?? 'Failed to create incident.');
       }
     } catch (err) {
-      console.error('Failed to create incident', err);
+      setError('Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -47,6 +51,10 @@ export default function NewIncidentPage() {
     <div className="mx-auto max-w-2xl px-6 py-8">
       <h1 className="text-2xl font-bold text-neutral-900">New incident</h1>
       <p className="mt-1 text-sm text-neutral-600">Document a safety incident.</p>
+
+      {error && (
+        <div className="mt-4 rounded-md bg-danger-bg p-3 text-sm text-danger-text">{error}</div>
+      )}
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
         <div className="grid gap-4 sm:grid-cols-2">

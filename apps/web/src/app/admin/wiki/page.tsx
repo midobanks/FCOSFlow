@@ -1,10 +1,11 @@
 import Link from 'next/link';
-import { getBaseUrl } from '@/lib/base-url';
 import { ApprovalBadge } from '@fcos/ui';
 import type { ApprovalBadgeStatus } from '@fcos/ui';
 import { requireAdmin } from '@/lib/require-admin';
 import { LogoutButton } from '@/components/LogoutButton';
 import { DeleteArticleButton } from '@/components/DeleteArticleButton';
+import { getArticlesByOrganization } from '@fcos/application';
+import { getAuthContext } from '@/lib/auth-context';
 
 type Article = {
   id: string;
@@ -16,19 +17,8 @@ type Article = {
   governanceLevel: string;
   ownerId: string;
   language: string;
-  updatedAt: string;
+  updatedAt: Date | string;
 };
-
-async function getArticles(): Promise<Article[]> {
-  try {
-    const baseUrl = getBaseUrl();
-    const res = await fetch(`${baseUrl}/api/v1/wiki/articles?limit=100`, { cache: 'no-store' });
-    const json = await res.json();
-    return json.ok ? json.data.articles : [];
-  } catch {
-    return [];
-  }
-}
 
 function mapStatusToBadge(status: string, governanceLevel: string): ApprovalBadgeStatus {
   if (status === 'PUBLISHED') {
@@ -41,7 +31,9 @@ function mapStatusToBadge(status: string, governanceLevel: string): ApprovalBadg
 
 export default async function AdminWikiPage() {
   await requireAdmin();
-  const articles = await getArticles();
+  const ctx = await getAuthContext();
+  const result = await getArticlesByOrganization(ctx, { limit: 100 });
+  const articles: any[] = result.ok ? result.data.articles : [];
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
@@ -72,7 +64,7 @@ export default async function AdminWikiPage() {
             </tr>
           </thead>
           <tbody>
-            {articles.map((article) => (
+            {articles.map((article: any) => (
               <tr key={article.id} className="border-b border-neutral-100 text-sm last:border-b-0 hover:bg-neutral-25">
                 <td className="px-4 py-3">
                   <Link href={`/admin/wiki/${article.id}`} className="font-medium text-neutral-900 hover:text-brand-500">
@@ -92,7 +84,6 @@ export default async function AdminWikiPage() {
                     <Link
                       href={`/admin/wiki/${article.id}`}
                       className="rounded px-2 py-1 text-xs font-medium text-brand-500 hover:bg-brand-50"
-                      title={`Edit ${article.title}`}
                     >
                       Edit
                     </Link>
@@ -114,4 +105,3 @@ export default async function AdminWikiPage() {
     </div>
   );
 }
-

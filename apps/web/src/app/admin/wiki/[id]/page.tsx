@@ -3,10 +3,12 @@ import { ApprovalBadge, ArticleMetadataStrip } from '@fcos/ui';
 import type { ApprovalBadgeStatus } from '@fcos/ui';
 import { requireAdmin } from '@/lib/require-admin';
 import { getBaseUrl } from '@/lib/base-url';
+import { RichTextDisplay } from '@/components/RichTextDisplay';
 
 type Version = {
   id: string;
   version: number;
+  content: Record<string, unknown>;
   changeNotes: string | null;
   status: string;
   createdById: string;
@@ -149,6 +151,13 @@ export default async function ArticleDetailPage({
             </form>
           </div>
         )}
+      </div>
+
+      <div className="mb-10">
+        <h2 className="mb-3 text-lg font-semibold text-neutral-800">Content</h2>
+        <div className="prose prose-sm max-w-none rounded-lg border border-neutral-200 bg-white p-6">
+          <RichTextDisplay content={version.content as Record<string, unknown>} />
+        </div>
       </div>
 
       <div>

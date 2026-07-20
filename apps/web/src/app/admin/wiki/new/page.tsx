@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { RichTextEditor } from '@/components/RichTextEditor';
 
 const articleTypes = [
   { value: 'SOP', label: 'SOP' },
@@ -29,6 +30,7 @@ export default function NewArticlePage() {
   const [summary, setSummary] = useState('');
   const [articleType, setArticleType] = useState('SOP');
   const [processArea, setProcessArea] = useState('');
+  const [content, setContent] = useState<Record<string, unknown>>({ type: 'doc', content: [] });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -46,7 +48,7 @@ export default function NewArticlePage() {
           summary: summary || undefined,
           articleType,
           processArea: processArea || undefined,
-          content: { type: 'doc', content: [] },
+          content,
         }),
       });
 
@@ -65,9 +67,9 @@ export default function NewArticlePage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
+    <div className="mx-auto max-w-4xl px-6 py-8">
       <h1 className="text-2xl font-bold text-neutral-900">New article</h1>
-      <p className="mt-1 text-sm text-neutral-600">Create a new warehouse wiki article.</p>
+      <p className="mt-1 text-sm text-neutral-600">Create a new warehouse wiki article with rich content.</p>
 
       {error && (
         <div className="mt-4 rounded-md bg-danger-bg p-3 text-sm text-danger-text">{error}</div>
@@ -102,8 +104,15 @@ export default function NewArticlePage() {
 
         <div>
           <label htmlFor="summary" className="text-xs font-medium text-neutral-600">Summary</label>
-          <textarea id="summary" value={summary} onChange={(e) => setSummary(e.target.value)} rows={3}
+          <textarea id="summary" value={summary} onChange={(e) => setSummary(e.target.value)} rows={2}
             className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" />
+        </div>
+
+        <div>
+          <label className="text-xs font-medium text-neutral-600">Content</label>
+          <div className="mt-1">
+            <RichTextEditor content={content} onChange={setContent} placeholder="Write your article content here..." />
+          </div>
         </div>
 
         <div className="flex gap-4">

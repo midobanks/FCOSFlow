@@ -9,7 +9,7 @@ export async function GET() {
     const result = await listIncidents(ctx);
     if (!result.ok) return apiError(400, result.error.code, result.error.message);
     return NextResponse.json({ ok: true, data: result.data });
-  } catch (e) { return apiError(500, 'server_error', 'Something went wrong.'); }
+  } catch (e) { console.error('GET /api/v1/incidents failed', e); return apiError(500, 'server_error', 'Something went wrong.'); }
 }
 
 export async function POST(req: NextRequest) {
@@ -19,5 +19,8 @@ export async function POST(req: NextRequest) {
     const result = await createIncident(ctx, body);
     if (!result.ok) return apiError(400, result.error.code, result.error.message);
     return NextResponse.json({ ok: true, data: result.data }, { status: 201 });
-  } catch (e) { return apiError(500, 'server_error', 'Something went wrong.'); }
+  } catch (e) {
+    console.error('POST /api/v1/incidents failed:', e);
+    return apiError(500, 'server_error', 'Something went wrong.');
+  }
 }

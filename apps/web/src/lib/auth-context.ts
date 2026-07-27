@@ -8,35 +8,35 @@ export type AuthContext = {
   roles: string[];
 };
 
-let cachedPromise: Promise<AuthContext> | null = null;
+let cached: AuthContext | null = null;
 
-export function getAuthContext(_req?: NextRequest): Promise<AuthContext> {
-  if (!cachedPromise) {
-    cachedPromise = resolveAuthContext();
-  }
-  return cachedPromise;
-}
+export async function getAuthContext(_req?: NextRequest): Promise<AuthContext> {
+  if (cached) return cached;
 
-async function resolveAuthContext(): Promise<AuthContext> {
-  const [org, user] = await Promise.all([
-    prisma.organization.findFirst({ where: { slug: 'fcos-flow' } }),
-    prisma.user.findFirst({
-      where: { email: 'admin@fcos.app' },
-      include: { roles: { include: { role: true } } },
-    }),
-  ]);
+  try {
+    const [org, user] = await Promise.all([
+      prisma.organization.findFirst({ where: { slug: 'fcos-flow' } }),
+      prisma.user.findFirst({
+        where: { email: 'admin@fcos.app' },
+        include: { roles: { include: { role: true } } },
+      }),
+    ]);
 
-  if (!org || !user) {
-    return {
-      userId: 'system',
-      organizationId: 'org_placeholder',
-      roles: ['ADMIN'],
-    };
+    if (org && user) {
+      cached = {
+        userId: user.id,
+        organizationId: org.id,
+        roles: user.roles.map((ur) => ur.role.name),
+      };
+      return cached;
+    }
+  } catch (e) {
+    console.error('Auth context DB lookup failed, using fallback:', e);
   }
 
   return {
-    userId: user.id,
-    organizationId: org.id,
-    roles: user.roles.map((ur) => ur.role.name),
+    userId: 'system',
+    organizationId: 'org_placeholder',
+    roles: ['ADMIN'],
   };
 }

@@ -16,6 +16,9 @@ export function SiteHeader() {
           <Link href="/command-center" className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
             Command
           </Link>
+          <Link href="/shift-steering" className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
+            Steering
+          </Link>
           <Link href="/incidents" className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
             Incidents
           </Link>

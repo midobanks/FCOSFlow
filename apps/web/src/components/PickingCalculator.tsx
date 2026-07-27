@@ -3,6 +3,7 @@ import { useState } from 'react';
 type PickingCalculatorProps = {
   zoneName: string;
   availableHoursPerShopper: number;
+  inactiveMinutes: number;
 };
 
 type Inputs = {
@@ -11,7 +12,6 @@ type Inputs = {
   targetSpeed: string;
   avgLinesPerRound: string;
   transitionMinutes: string;
-  inactiveMinutes: string;
   endTime: string;
   assignedShoppers: string;
 };
@@ -27,13 +27,12 @@ type Results = {
   projectedFinish: string;
 };
 
-function calculate(inputs: Inputs, availableHoursPerShopper: number): Results | null {
+function calculate(inputs: Inputs, availableHoursPerShopper: number, inactiveMin: number): Results | null {
   const totalOls = parseFloat(inputs.totalOls);
   const completedOls = parseFloat(inputs.completedOls) || 0;
   const speed = parseFloat(inputs.targetSpeed);
   const avgLines = parseFloat(inputs.avgLinesPerRound);
   const transitionMin = parseFloat(inputs.transitionMinutes) || 0;
-  const inactiveMin = parseFloat(inputs.inactiveMinutes) || 0;
   const assigned = parseFloat(inputs.assignedShoppers) || 0;
 
   if (!totalOls || !speed || !avgLines) return null;
@@ -59,19 +58,18 @@ function calculate(inputs: Inputs, availableHoursPerShopper: number): Results | 
   return { remainingOls, baseHours, estimatedRounds, transitionHours, adjustedHours, shoppersNeeded, gap, projectedFinish };
 }
 
-export function PickingCalculator({ zoneName, availableHoursPerShopper }: PickingCalculatorProps) {
+export function PickingCalculator({ zoneName, availableHoursPerShopper, inactiveMinutes }: PickingCalculatorProps) {
   const [inputs, setInputs] = useState<Inputs>({
     totalOls: '',
     completedOls: '0',
     targetSpeed: '65',
     avgLinesPerRound: '12',
     transitionMinutes: '2',
-    inactiveMinutes: '20',
     endTime: '14:00',
     assignedShoppers: '',
   });
 
-  const results = calculate(inputs, availableHoursPerShopper);
+  const results = calculate(inputs, availableHoursPerShopper, inactiveMinutes);
   const [expanded, setExpanded] = useState(false);
 
   function set(field: keyof Inputs, value: string) {
@@ -126,9 +124,8 @@ export function PickingCalculator({ zoneName, availableHoursPerShopper }: Pickin
                 className="mt-0.5 block w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500" />
             </div>
             <div>
-              <label className="text-xs text-neutral-500">Inactive (min)</label>
-              <input type="number" min="0" value={inputs.inactiveMinutes} onChange={(e) => set('inactiveMinutes', e.target.value)}
-                className="mt-0.5 block w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500" />
+              <label className="text-xs text-neutral-500">Inactive time</label>
+              <p className="mt-0.5 text-sm font-medium text-neutral-800">{inactiveMinutes} min</p>
             </div>
           </div>
 

@@ -109,7 +109,11 @@ export function ShiftSteeringColumn({
       </div>
 
       <div className="px-4 py-3">
-        <PickingCalculator zoneName={zoneName} availableHoursPerShopper={productiveHours} />
+        <PickingCalculator
+          zoneName={zoneName}
+          availableHoursPerShopper={productiveHours}
+          inactiveMinutes={zoneName === 'Ambient' ? 3 : zoneName === 'Chilled' ? 5 : 15}
+        />
       </div>
     </div>
   );

@@ -2,22 +2,27 @@ export type Task = {
   id: string;
   name: string;
   allocatedHours: string;
-  assignedShoppers: string;
   endTime: string;
 };
 
 type TaskRowProps = {
   task: Task;
+  productiveHoursPerShopper: number;
   onChange: (task: Task) => void;
 };
 
-export function TaskRow({ task, onChange }: TaskRowProps) {
+export function TaskRow({ task, productiveHoursPerShopper, onChange }: TaskRowProps) {
   function update(field: keyof Task, value: string) {
     onChange({ ...task, [field]: value });
   }
 
+  const hours = parseFloat(task.allocatedHours) || 0;
+  const shoppersNeeded = productiveHoursPerShopper > 0 && hours > 0
+    ? Math.ceil(hours / productiveHoursPerShopper)
+    : 0;
+
   return (
-    <div className="grid grid-cols-12 gap-2 items-center text-sm py-2 border-b border-neutral-100 last:border-b-0">
+    <div className="grid grid-cols-11 gap-2 items-center text-sm py-2 border-b border-neutral-100 last:border-b-0">
       <div className="col-span-3 font-medium text-neutral-800">{task.name}</div>
       <div className="col-span-3">
         <input
@@ -31,16 +36,11 @@ export function TaskRow({ task, onChange }: TaskRowProps) {
         />
       </div>
       <div className="col-span-2">
-        <input
-          type="number"
-          min="0"
-          value={task.assignedShoppers}
-          onChange={(e) => update('assignedShoppers', e.target.value)}
-          className="w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500"
-          placeholder="0"
-        />
+        <span className={`font-semibold ${shoppersNeeded > 0 ? 'text-brand-500' : 'text-neutral-300'}`}>
+          {shoppersNeeded > 0 ? shoppersNeeded : '—'}
+        </span>
       </div>
-      <div className="col-span-2">
+      <div className="col-span-3">
         <input
           type="time"
           value={task.endTime}
@@ -48,18 +48,6 @@ export function TaskRow({ task, onChange }: TaskRowProps) {
           className="w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500"
         />
       </div>
-      <div className="col-span-2 text-xs text-neutral-500">
-        {calculateShoppersNeeded(task)}
-      </div>
     </div>
   );
-}
-
-function calculateShoppersNeeded(task: Task): string {
-  const hours = parseFloat(task.allocatedHours);
-  const shoppers = parseFloat(task.assignedShoppers);
-  if (!hours || hours <= 0) return '—';
-
-  if (!shoppers || shoppers <= 0) return `${Math.ceil(hours)} needed`;
-  return `${Math.ceil(hours / shoppers)} h each`;
 }

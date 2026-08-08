@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TaskRow, type Task } from './TaskRow';
 import { PickingCalculator } from './PickingCalculator';
+import { formatShoppers } from '@/lib/shift-math';
 
 export type ZoneName = 'Ambient' | 'Chilled' | 'Frozen';
 
@@ -48,10 +49,10 @@ export function ShiftSteeringColumn({
   const remainingHours = Math.max(0, availableHours - totalAllocated);
 
   // Calculate total shoppers needed across all tasks based on allocated hours
-  const totalShoppersNeeded = tasks.reduce((sum, t) => {
+  const totalShoppersNeeded = formatShoppers(tasks.reduce((sum, t) => {
     const h = parseFloat(t.allocatedHours) || 0;
-    return sum + (productiveHours > 0 && h > 0 ? Math.ceil(h / productiveHours) : 0);
-  }, 0);
+    return sum + (productiveHours > 0 && h > 0 ? h / productiveHours : 0);
+  }, 0));
 
   const status = (() => {
     if (shopperCount === 0) return 'neutral';

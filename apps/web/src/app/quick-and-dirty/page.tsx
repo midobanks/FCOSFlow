@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ShiftShopperCalculator } from '@/components/ShiftShopperCalculator';
 import { AdditionalTaskCard, calculateTaskShoppers, type AdditionalTask } from '@/components/AdditionalTaskCard';
-import { formatShoppers } from '@/components/AdditionalTaskCalculator';
+import { formatShoppers } from '@/lib/shift-math';
 
 const DEFAULT_TASKS: AdditionalTask[] = [
   { id: 'return-waste', name: 'Return & Waste', hours: '', startTime: '06:00', endTime: '14:00', breakMinutes: '30' },

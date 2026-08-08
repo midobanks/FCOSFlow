@@ -1,6 +1,7 @@
 'use client';
 
-import { calculateTaskShoppers, formatShoppers, type AdditionalTask } from './AdditionalTaskCalculator';
+import { calculateTaskShoppers, type AdditionalTask } from './AdditionalTaskCalculator';
+import { formatShoppers } from '@/lib/shift-math';
 
 export { calculateTaskShoppers, type AdditionalTask };
 

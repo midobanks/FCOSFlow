@@ -1,3 +1,5 @@
+import { formatShoppers } from '@/lib/shift-math';
+
 export type Task = {
   id: string;
   name: string;
@@ -18,7 +20,7 @@ export function TaskRow({ task, productiveHoursPerShopper, onChange }: TaskRowPr
 
   const hours = parseFloat(task.allocatedHours) || 0;
   const shoppersNeeded = productiveHoursPerShopper > 0 && hours > 0
-    ? Math.ceil(hours / productiveHoursPerShopper)
+    ? formatShoppers(hours / productiveHoursPerShopper)
     : 0;
 
   return (

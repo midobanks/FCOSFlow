@@ -1,3 +1,5 @@
+import { formatShoppers } from '../lib/shift-math';
+
 export type AdditionalTask = {
   id: string;
   name: string;
@@ -12,10 +14,6 @@ function timeToHours(time: string): number | null {
   const [h, m] = time.split(':').map(Number);
   if (h == null || m == null || isNaN(h) || isNaN(m)) return null;
   return h + m / 60;
-}
-
-export function formatShoppers(value: number): number {
-  return parseFloat(value.toFixed(2));
 }
 
 export function calculateTaskShoppers(task: AdditionalTask): number | null {

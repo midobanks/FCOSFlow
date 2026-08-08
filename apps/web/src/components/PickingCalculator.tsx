@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatShoppers } from '@/lib/shift-math';
 
 type PickingCalculatorProps = {
   zoneName: string;
@@ -39,13 +40,13 @@ function calculate(inputs: Inputs, availableHoursPerShopper: number, inactiveMin
 
   const remainingOls = totalOls - completedOls;
   const baseHours = remainingOls / speed;
-  const estimatedRounds = Math.ceil(remainingOls / avgLines);
+  const estimatedRounds = formatShoppers(remainingOls / avgLines);
   const transitionHours = (estimatedRounds * transitionMin) / 60;
   const adjustedHours = baseHours + transitionHours + inactiveMin / 60;
 
   const effectiveHours = availableHoursPerShopper;
-  const shoppersNeeded = effectiveHours > 0 ? Math.ceil(adjustedHours / effectiveHours) : 0;
-  const gap = assigned > 0 ? shoppersNeeded - assigned : shoppersNeeded;
+  const shoppersNeeded = effectiveHours > 0 ? formatShoppers(adjustedHours / effectiveHours) : 0;
+  const gap = formatShoppers(assigned > 0 ? shoppersNeeded - assigned : shoppersNeeded);
 
   const projectedFinish = (() => {
     if (assigned <= 0) return '—';

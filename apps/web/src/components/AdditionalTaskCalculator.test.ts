@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { calculateTaskShoppers, formatShoppers } from './AdditionalTaskCalculator';
+import { calculateTaskShoppers } from './AdditionalTaskCalculator';
+import { formatShoppers } from '../lib/shift-math';
 
 function task(overrides: Partial<Parameters<typeof calculateTaskShoppers>[0]> = {}) {
   return {

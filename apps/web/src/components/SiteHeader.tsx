@@ -13,6 +13,9 @@ export function SiteHeader() {
           <Link href="/shift-steering" className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
             Steering
           </Link>
+          <Link href="/quick-and-dirty" className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
+            Quick & Dirty
+          </Link>
           <Link href="/companion" className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
             Operate
           </Link>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ShiftShopperCalculator } from '@/components/ShiftShopperCalculator';
 import { AdditionalTaskCard, calculateTaskShoppers, type AdditionalTask } from '@/components/AdditionalTaskCard';
+import { formatShoppers } from '@/components/AdditionalTaskCalculator';
 
 const DEFAULT_TASKS: AdditionalTask[] = [
   { id: 'return-waste', name: 'Return & Waste', hours: '', startTime: '06:00', endTime: '14:00', breakMinutes: '30' },
@@ -40,7 +41,7 @@ export default function QuickAndDirtyPage() {
           </div>
           <div className="rounded-lg border border-brand-200 bg-brand-50 px-4 py-2 text-right">
             <p className="text-xs font-medium text-brand-700">Total shoppers</p>
-            <p className="text-xl font-bold text-brand-500">{totalShoppers > 0 ? totalShoppers : <span className="text-neutral-300">&mdash;</span>}</p>
+            <p className="text-xl font-bold text-brand-500">{totalShoppers > 0 ? formatShoppers(totalShoppers) : <span className="text-neutral-300">&mdash;</span>}</p>
           </div>
         </div>
 
@@ -76,7 +77,7 @@ export default function QuickAndDirtyPage() {
                     <td className="py-2 pr-4 text-neutral-600">{task.breakMinutes || '—'}</td>
                     <td className="py-2 text-right">
                       <span className={`rounded px-2 py-0.5 text-xs font-semibold ${shoppers ? 'bg-brand-50 text-brand-500' : 'bg-neutral-50 text-neutral-300'}`}>
-                        {shoppers ?? '—'}
+                        {shoppers != null ? formatShoppers(shoppers) : '—'}
                       </span>
                     </td>
                   </tr>
@@ -87,7 +88,7 @@ export default function QuickAndDirtyPage() {
                   <td className="py-2 pr-4" />
                   <td className="py-2 pr-4" />
                   <td className="py-2 pr-4" />
-                  <td className="py-2 text-right font-semibold text-brand-500">{totalShoppers > 0 ? totalShoppers : '—'}</td>
+                  <td className="py-2 text-right font-semibold text-brand-500">{totalShoppers > 0 ? formatShoppers(totalShoppers) : '—'}</td>
                 </tr>
               </tbody>
             </table>

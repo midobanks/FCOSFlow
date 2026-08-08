@@ -14,6 +14,10 @@ function timeToHours(time: string): number | null {
   return h + m / 60;
 }
 
+export function formatShoppers(value: number): number {
+  return parseFloat(value.toFixed(2));
+}
+
 export function calculateTaskShoppers(task: AdditionalTask): number | null {
   const hours = parseFloat(task.hours);
   if (!hours || hours <= 0) return null;
@@ -29,5 +33,5 @@ export function calculateTaskShoppers(task: AdditionalTask): number | null {
   const productiveHours = windowHours - breakHours;
   if (productiveHours <= 0) return null;
 
-  return Math.ceil(hours / productiveHours);
+  return formatShoppers(hours / productiveHours);
 }

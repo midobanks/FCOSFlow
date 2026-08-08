@@ -1,6 +1,6 @@
 'use client';
 
-import { calculateTaskShoppers, type AdditionalTask } from './AdditionalTaskCalculator';
+import { calculateTaskShoppers, formatShoppers, type AdditionalTask } from './AdditionalTaskCalculator';
 
 export { calculateTaskShoppers, type AdditionalTask };
 
@@ -31,13 +31,14 @@ export function AdditionalTaskCard({ task, onChange }: AdditionalTaskCardProps) 
   const windowHours = start != null && end != null ? end - start : null;
   const productiveHours = windowHours != null ? windowHours - breakHours : null;
   const showBreakdown = shoppers != null && windowHours != null && productiveHours != null;
+  const formattedShoppers = shoppers != null ? formatShoppers(shoppers) : null;
 
   return (
     <div className="rounded-lg border border-neutral-200 bg-white p-5">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-sm font-semibold text-neutral-700">{task.name}</h3>
         <span className={`rounded-md px-2.5 py-1 text-base font-bold ${shoppers ? 'bg-brand-50 text-brand-500' : 'bg-neutral-50 text-neutral-300'}`}>
-          {shoppers ? `${shoppers} shopper${shoppers === 1 ? '' : 's'}` : '—'}
+          {formattedShoppers != null ? `${formattedShoppers} shopper${formattedShoppers === 1 ? '' : 's'}` : '—'}
         </span>
       </div>
 
@@ -66,7 +67,7 @@ export function AdditionalTaskCard({ task, onChange }: AdditionalTaskCardProps) 
 
       {showBreakdown && (
         <p className="mt-3 text-xs text-neutral-500">
-          {windowHours.toFixed(1)} h window &minus; {breakHours > 0 ? `${(breakHours * 60).toFixed(0)} min break = ${productiveHours.toFixed(1)} h` : `${productiveHours.toFixed(1)} h`} per shopper &rarr; {shoppers}
+          {windowHours.toFixed(1)} h window &minus; {breakHours > 0 ? `${(breakHours * 60).toFixed(0)} min break = ${productiveHours.toFixed(1)} h` : `${productiveHours.toFixed(1)} h`} per shopper &rarr; {formattedShoppers}
         </p>
       )}
     </div>

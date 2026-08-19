@@ -77,7 +77,7 @@ export default function CompanionPage() {
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900">Captain todo list</h1>
+          <h1 className="text-2xl font-bold text-neutral-900">Checklist</h1>
           <p className="mt-0.5 text-sm text-neutral-500">
             {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
           </p>

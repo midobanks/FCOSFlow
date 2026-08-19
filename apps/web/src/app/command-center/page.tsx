@@ -35,7 +35,7 @@ export default async function CommandCenterPage() {
     <div className="mx-auto max-w-5xl px-6 py-8">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900">Command Center</h1>
+          <h1 className="text-2xl font-bold text-neutral-900">Dashboard</h1>
           <p className="mt-1 text-sm text-neutral-600">Live site and shift health overview</p>
         </div>
         <div className="flex items-center gap-3">
@@ -55,7 +55,7 @@ export default async function CommandCenterPage() {
 
       {!data ? (
         <div className="rounded-lg border border-neutral-200 bg-white p-12 text-center">
-          <p className="text-neutral-400">Unable to load Command Center.</p>
+          <p className="text-neutral-400">Unable to load Dashboard.</p>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

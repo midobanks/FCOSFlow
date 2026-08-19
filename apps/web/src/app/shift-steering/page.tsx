@@ -38,7 +38,7 @@ export default function ShiftSteeringPage() {
       <div className="mb-6 rounded-lg border border-neutral-200 bg-white p-4 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl font-bold text-neutral-900">Shift Steering</h1>
+            <h1 className="text-xl font-bold text-neutral-900">Command Center</h1>
             <p className="text-sm text-neutral-500">{siteName} &middot; {shiftDate} &middot; {shiftName}</p>
           </div>
           <div className="text-right text-sm text-neutral-500">

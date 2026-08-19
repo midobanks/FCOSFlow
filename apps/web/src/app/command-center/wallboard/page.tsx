@@ -27,7 +27,7 @@ export default async function WallboardPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-900 px-12 py-12">
       <h1 className="mb-2 text-4xl font-bold text-neutral-0">FCOS Flow</h1>
-      <p className="mb-10 text-xl text-neutral-400">Command Center</p>
+      <p className="mb-10 text-xl text-neutral-400">Dashboard</p>
 
       {!data ? (
         <p className="text-lg text-neutral-500">Loading...</p>

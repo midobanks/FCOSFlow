@@ -25,7 +25,7 @@ export default function QuickAndDirtyPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold text-neutral-900">Quick and Dirty</h1>
+      <h1 className="text-2xl font-bold text-neutral-900">Shift Steering</h1>
       <p className="mt-1 text-sm text-neutral-600">Plan pick shoppers and additional task staffing for the shift.</p>
 
       <section className="mt-6">

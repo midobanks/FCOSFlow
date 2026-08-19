@@ -11,16 +11,16 @@ export function SiteHeader() {
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           <Link href="/shift-steering" className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
-            Steering
+            Command Center
           </Link>
           <Link href="/quick-and-dirty" className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
-            Quick & Dirty
+            Shift Steering
           </Link>
           <Link href="/companion" className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
-            Operate
+            Checklist
           </Link>
           <Link href="/command-center" className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
-            Command
+            Dashboard
           </Link>
           <Link href="/incidents" className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
             Incidents

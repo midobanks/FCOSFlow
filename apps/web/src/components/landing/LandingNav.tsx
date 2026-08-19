@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react';
 import { Logo } from '@/components/Logo';
 
 const navLinks = [
-  { href: '/shift-steering', label: 'Steering' },
-  { href: '/quick-and-dirty', label: 'Quick & Dirty' },
-  { href: '/companion', label: 'Operate' },
-  { href: '/command-center', label: 'Command' },
+  { href: '/shift-steering', label: 'Command Center' },
+  { href: '/quick-and-dirty', label: 'Shift Steering' },
+  { href: '/companion', label: 'Checklist' },
+  { href: '/command-center', label: 'Dashboard' },
   { href: '/incidents', label: 'Incidents' },
   { href: '/processes', label: 'Learn' },
   { href: '/handovers', label: 'Handovers' },

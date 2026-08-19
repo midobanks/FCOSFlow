@@ -1,15 +1,16 @@
 import type { Metadata } from 'next';
-import { SiteHeader } from '@/components/SiteHeader';
+import { ConditionalSiteHeader } from '@/components/ConditionalSiteHeader';
 
 import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://fcos-flow.vercel.app'),
   title: {
-    default: 'FCOS Flow',
+    default: 'FCOS Flow — Run every shift with confidence.',
     template: '%s | FCOS Flow',
   },
-  description: 'Run every shift with confidence.',
+  description:
+    'The AI-assisted operating system for fulfillment centres. One structured environment to prepare, run, monitor, hand over, and improve every shift.',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -18,22 +19,18 @@ export const metadata: Metadata = {
     apple: '/logo.png',
   },
   openGraph: {
-    title: 'FCOS Flow',
-    description: 'Run every shift with confidence.',
+    title: 'FCOS Flow — Run every shift with confidence.',
+    description:
+      'The AI-assisted operating system for fulfillment centres. One structured environment to prepare, run, monitor, hand over, and improve every shift.',
     siteName: 'FCOS Flow',
-    images: [{ url: '/logo.png', width: 256, height: 256 }],
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-neutral-25">
-        <SiteHeader />
+      <body className="bg-neutral-25 min-h-screen">
+        <ConditionalSiteHeader />
         <main>{children}</main>
       </body>
     </html>

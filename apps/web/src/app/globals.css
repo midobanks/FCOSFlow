@@ -29,7 +29,7 @@
   --color-warning-text: #744a0e;
 
   --color-danger-base: #c53030;
-  --color-danger-bg: #fdec ec;
+  --color-danger-bg: #fdecec;
   --color-danger-text: #822020;
 
   --color-info-base: #2b6cb0;
@@ -46,6 +46,48 @@
   --radius-md: 10px;
   --radius-lg: 14px;
   --radius-pill: 999px;
+
+  --color-ink: #1d1d1f;
+  --color-deep-gray: #474747;
+  --color-mid-gray: #707070;
+  --color-quiet-dot: #777779;
+  --color-hairline: #d6d6d6;
+  --color-cool-wash: #e8e8ed;
+  --color-canvas: #f5f5f7;
+  --color-faded-surface: #fafafc;
+  --color-paper: #ffffff;
+  --color-electric-blue: #0071e3;
+  --color-link-blue: #0066cc;
+  --color-ember: #b64400;
+  --color-sky: #c8d8e0;
+  --color-citrus: #dddc8c;
+  --color-starlight: #f0e4d3;
+  --color-silver: #e3e4e5;
+  --color-blush: #e8d0d0;
+  --color-indigo: #596680;
+  --color-midnight: #2e3642;
+
+  --text-micro: 12px;
+  --text-caption: 14px;
+  --text-body-sm: 17px;
+  --text-body: 21px;
+  --text-body-lg: 28px;
+  --text-subheading: 32px;
+  --text-heading-sm: 40px;
+  --text-heading: 56px;
+  --text-heading-lg: 80px;
+  --text-display: 96px;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 64px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {

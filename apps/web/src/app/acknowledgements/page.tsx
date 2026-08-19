@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import { getBaseUrl } from '@/lib/base-url';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Card } from '@/components/ui/Card';
+import { StatusPill } from '@/components/ui/StatusPill';
 
 type Ack = {
   article: { id: string; title: string };
@@ -22,41 +25,38 @@ export default async function AcknowledgementsPage() {
   const acks = await getAcknowledgements();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
-      <h1 className="text-2xl font-bold text-neutral-900">Acknowledgements</h1>
-      <p className="mt-1 text-sm text-neutral-600">Required reading and acknowledgements.</p>
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+      <PageHeader title="Acknowledgements" subtitle="Required reading and acknowledgements." />
 
       <div className="mt-8 space-y-3">
         {acks.length === 0 ? (
-          <div className="rounded-lg border border-neutral-200 bg-white p-8 text-center">
-            <p className="text-neutral-400">No pending acknowledgements.</p>
-          </div>
+          <Card padded={false} className="p-8 text-center">
+            <p className="text-quiet-dot">No pending acknowledgements.</p>
+          </Card>
         ) : (
           acks.map((ack) => (
-            <div
+            <Card
               key={`${ack.article.id}-${ack.version}`}
-              className="flex items-center justify-between rounded-lg border border-neutral-200 bg-white p-4"
+              className="flex items-center justify-between"
             >
               <div>
-                <Link href={`/wiki/${ack.article.id}`} className="text-sm font-medium text-brand-500 hover:text-brand-600">
+                <Link
+                  href={`/wiki/${ack.article.id}`}
+                  className="text-link-blue text-sm font-medium hover:underline"
+                >
                   {ack.article.title}
                 </Link>
-                <p className="text-xs text-neutral-400">Version {ack.version}</p>
+                <p className="text-quiet-dot text-xs">Version {ack.version}</p>
               </div>
               {ack.completedAt ? (
-                <span className="rounded bg-success-bg px-2.5 py-0.5 text-xs font-medium text-success-text">
-                  Completed
-                </span>
+                <StatusPill tone="success" label="Completed" />
               ) : (
-                <span className="rounded bg-warning-bg px-2.5 py-0.5 text-xs font-medium text-warning-text">
-                  Pending
-                </span>
+                <StatusPill tone="warning" label="Pending" />
               )}
-            </div>
+            </Card>
           ))
         )}
       </div>
     </div>
   );
 }
-

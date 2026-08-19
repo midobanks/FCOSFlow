@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ApprovalBadge, ArticleMetadataStrip } from '@fcos/ui';
 import type { ApprovalBadgeStatus } from '@fcos/ui';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { RichTextDisplay } from '@/components/RichTextDisplay';
 import { getBaseUrl } from '@/lib/base-url';
 
@@ -52,11 +53,7 @@ function mapStatusToBadge(status: string, governanceLevel: string): ApprovalBadg
   return status as ApprovalBadgeStatus;
 }
 
-export default async function WikiArticlePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function WikiArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const data = await getArticle(id);
 
@@ -67,21 +64,14 @@ export default async function WikiArticlePage({
   const { article, version } = data;
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <div className="mb-6">
-        <Link href="/search" className="text-sm text-brand-500 hover:text-brand-600">
+        <Link href="/search" className="text-link-blue text-sm hover:underline">
           &larr; Back to search
         </Link>
       </div>
 
-      <div className="mb-4 flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-900">{article.title}</h1>
-          {article.summary && (
-            <p className="mt-2 text-neutral-600">{article.summary}</p>
-          )}
-        </div>
-      </div>
+      <PageHeader title={article.title} subtitle={article.summary ?? undefined} />
 
       <div className="mb-8">
         <ArticleMetadataStrip

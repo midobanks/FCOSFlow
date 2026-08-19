@@ -1,12 +1,39 @@
 import Link from 'next/link';
 import { getBaseUrl } from '@/lib/base-url';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Card } from '@/components/ui/Card';
 
 const processAreas = [
-  { id: 'RECEIPT', title: 'Receipt', description: 'Inbound goods receipt, verification, and staging', count: 0 },
-  { id: 'PICKING', title: 'Picking', description: 'Order picking, packing, and dispatch preparation', count: 0 },
-  { id: 'STOCKFLOW', title: 'Stockflow', description: 'Inventory flow, replenishment, and stock organisation', count: 0 },
-  { id: 'TRUNKING', title: 'Trunking', description: 'Cross-dock, trunk management, and transfer coordination', count: 0 },
-  { id: 'INFLOW', title: 'Inflow', description: 'Supplier intake, quality checks, and put-away', count: 0 },
+  {
+    id: 'RECEIPT',
+    title: 'Receipt',
+    description: 'Inbound goods receipt, verification, and staging',
+    count: 0,
+  },
+  {
+    id: 'PICKING',
+    title: 'Picking',
+    description: 'Order picking, packing, and dispatch preparation',
+    count: 0,
+  },
+  {
+    id: 'STOCKFLOW',
+    title: 'Stockflow',
+    description: 'Inventory flow, replenishment, and stock organisation',
+    count: 0,
+  },
+  {
+    id: 'TRUNKING',
+    title: 'Trunking',
+    description: 'Cross-dock, trunk management, and transfer coordination',
+    count: 0,
+  },
+  {
+    id: 'INFLOW',
+    title: 'Inflow',
+    description: 'Supplier intake, quality checks, and put-away',
+    count: 0,
+  },
 ];
 
 async function getProcessCounts(): Promise<Record<string, number>> {
@@ -32,31 +59,28 @@ export default async function ProcessesPage() {
   const counts = await getProcessCounts();
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-8">
-      <h1 className="text-2xl font-bold text-neutral-900">Process libraries</h1>
-      <p className="mt-1 text-sm text-neutral-600">
-        Browse standard operating procedures and knowledge by process area.
-      </p>
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+      <PageHeader
+        title="Process libraries"
+        subtitle="Browse standard operating procedures and knowledge by process area."
+      />
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         {processAreas.map((area) => {
           const count = counts[area.id] ?? 0;
           return (
-            <Link
-              key={area.id}
-              href={`/processes/${area.id.toLowerCase()}`}
-              className="rounded-lg border border-neutral-200 bg-white p-5 transition-colors hover:border-brand-300"
-            >
-              <h2 className="text-lg font-semibold text-neutral-900">{area.title}</h2>
-              <p className="mt-1 text-sm text-neutral-600">{area.description}</p>
-              <p className="mt-3 text-xs text-neutral-400">
-                {count} article{count === 1 ? '' : 's'}
-              </p>
-            </Link>
+            <Card key={area.id} className="hover:border-brand-300 transition-colors">
+              <Link href={`/processes/${area.id.toLowerCase()}`} className="block">
+                <h2 className="text-ink text-lg font-semibold">{area.title}</h2>
+                <p className="text-deep-gray mt-1 text-sm">{area.description}</p>
+                <p className="text-quiet-dot mt-3 text-xs">
+                  {count} article{count === 1 ? '' : 's'}
+                </p>
+              </Link>
+            </Card>
           );
         })}
       </div>
     </div>
   );
 }
-

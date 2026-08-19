@@ -39,14 +39,14 @@ export default async function SearchPage({
   const results = q ? await searchArticles(q) : [];
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <div className="mb-8">
         <SearchField large autoFocus initialValue={q ?? ''} />
       </div>
 
       {q && (
         <div className="mb-6">
-          <p className="text-sm text-neutral-600">
+          <p className="text-mid-gray text-sm">
             {results.length === 0
               ? `No results for "${q}"`
               : `${results.length} result${results.length === 1 ? '' : 's'} for "${q}"`}
@@ -56,14 +56,9 @@ export default async function SearchPage({
 
       <div className="space-y-3">
         {results.map((result) => (
-          <ArticleCard
-            key={result.article.id}
-            {...result.article}
-            matchType={result.matchType}
-          />
+          <ArticleCard key={result.article.id} {...result.article} matchType={result.matchType} />
         ))}
       </div>
     </div>
   );
 }
-

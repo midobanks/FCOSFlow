@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { PillButton } from '@/components/ui/PillButton';
 
 export function LogoutButton() {
   const router = useRouter();
@@ -19,13 +20,14 @@ export function LogoutButton() {
   }
 
   return (
-    <button
+    <PillButton
       type="button"
+      variant="secondary"
+      size="sm"
       onClick={handleLogout}
       disabled={loading}
-      className="inline-flex h-9 items-center rounded-md border border-neutral-200 bg-white px-3 text-xs font-medium text-neutral-600 hover:bg-neutral-50 disabled:opacity-50"
     >
       {loading ? 'Signing out...' : 'Sign out'}
-    </button>
+    </PillButton>
   );
 }

@@ -1,4 +1,5 @@
 import { formatShoppers } from '@/lib/shift-math';
+import { inputClass } from '@/components/ui/Field';
 
 export type Task = {
   id: string;
@@ -19,13 +20,14 @@ export function TaskRow({ task, productiveHoursPerShopper, onChange }: TaskRowPr
   }
 
   const hours = parseFloat(task.allocatedHours) || 0;
-  const shoppersNeeded = productiveHoursPerShopper > 0 && hours > 0
-    ? formatShoppers(hours / productiveHoursPerShopper)
-    : 0;
+  const shoppersNeeded =
+    productiveHoursPerShopper > 0 && hours > 0
+      ? formatShoppers(hours / productiveHoursPerShopper)
+      : 0;
 
   return (
-    <div className="grid grid-cols-11 gap-2 items-center text-sm py-2 border-b border-neutral-100 last:border-b-0">
-      <div className="col-span-3 font-medium text-neutral-800">{task.name}</div>
+    <div className="border-hairline grid grid-cols-11 items-center gap-2 border-b py-2 text-sm last:border-b-0">
+      <div className="text-ink col-span-3 font-medium">{task.name}</div>
       <div className="col-span-3">
         <input
           type="number"
@@ -33,12 +35,17 @@ export function TaskRow({ task, productiveHoursPerShopper, onChange }: TaskRowPr
           step="0.5"
           value={task.allocatedHours}
           onChange={(e) => update('allocatedHours', e.target.value)}
-          className="w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500"
+          className={inputClass}
           placeholder="0"
         />
       </div>
-      <div className="col-span-2">
-        <span className={`font-semibold ${shoppersNeeded > 0 ? 'text-brand-500' : 'text-neutral-300'}`}>
+      <div className="col-span-2 flex items-center gap-1.5">
+        <span
+          className={`h-2 w-2 rounded-full ${shoppersNeeded > 0 ? 'bg-brand-500' : 'bg-quiet-dot'}`}
+        />
+        <span
+          className={`font-semibold tabular-nums ${shoppersNeeded > 0 ? 'text-brand-600' : 'text-quiet-dot'}`}
+        >
           {shoppersNeeded > 0 ? shoppersNeeded : '—'}
         </span>
       </div>
@@ -47,7 +54,7 @@ export function TaskRow({ task, productiveHoursPerShopper, onChange }: TaskRowPr
           type="time"
           value={task.endTime}
           onChange={(e) => update('endTime', e.target.value)}
-          className="w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500"
+          className={inputClass}
         />
       </div>
     </div>

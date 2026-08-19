@@ -4,6 +4,9 @@ import type { ApprovalBadgeStatus } from '@fcos/ui';
 import { requireAdmin } from '@/lib/require-admin';
 import { getBaseUrl } from '@/lib/base-url';
 import { RichTextDisplay } from '@/components/RichTextDisplay';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Card } from '@/components/ui/Card';
+import { PillButton } from '@/components/ui/PillButton';
 
 type Version = {
   id: string;
@@ -46,7 +49,9 @@ async function getArticle(id: string): Promise<ArticleData | null> {
 
 async function getVersions(id: string): Promise<Version[]> {
   try {
-    const res = await fetch(`${getBaseUrl()}/api/v1/wiki/articles/${id}/versions`, { cache: 'no-store' });
+    const res = await fetch(`${getBaseUrl()}/api/v1/wiki/articles/${id}/versions`, {
+      cache: 'no-store',
+    });
     const json = await res.json();
     return json.ok ? json.data : [];
   } catch {
@@ -63,11 +68,7 @@ function mapStatusToBadge(status: string, governanceLevel: string): ApprovalBadg
   return status as ApprovalBadgeStatus;
 }
 
-export default async function ArticleDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function ArticleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   await requireAdmin();
 
   const { id } = await params;
@@ -77,8 +78,11 @@ export default async function ArticleDetailPage({
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
         <div className="text-center">
-          <h1 className="text-xl font-bold text-neutral-800">Article not found</h1>
-          <Link href="/admin/wiki" className="mt-4 inline-flex h-11 items-center rounded-md bg-brand-500 px-5 text-sm font-medium text-white hover:bg-brand-600">
+          <h1 className="text-ink text-xl font-bold">Article not found</h1>
+          <Link
+            href="/admin/wiki"
+            className="bg-electric-blue text-paper mt-4 inline-flex items-center rounded-full px-5 py-2.5 text-sm font-medium transition-colors hover:opacity-90"
+          >
             Back to Wiki
           </Link>
         </div>
@@ -89,22 +93,20 @@ export default async function ArticleDetailPage({
   const { article, version } = data;
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-8">
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <div className="mb-6">
-        <Link href="/admin/wiki" className="text-sm text-brand-500 hover:text-brand-600">
+        <Link href="/admin/wiki" className="text-link-blue text-sm hover:underline">
           &larr; Back to Wiki
         </Link>
       </div>
 
-      <div className="mb-4 flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-900">{article.title}</h1>
-          {article.summary && (
-            <p className="mt-1 text-neutral-600">{article.summary}</p>
-          )}
-        </div>
-        <ApprovalBadge status={mapStatusToBadge(article.status, article.governanceLevel)} />
-      </div>
+      <PageHeader
+        title={article.title}
+        subtitle={article.summary ?? undefined}
+        action={
+          <ApprovalBadge status={mapStatusToBadge(article.status, article.governanceLevel)} />
+        }
+      />
 
       <div className="mb-8">
         <ArticleMetadataStrip
@@ -121,12 +123,9 @@ export default async function ArticleDetailPage({
       <div className="mb-8 flex gap-3">
         {article.status === 'DRAFT' && (
           <form action={`/api/v1/wiki/articles/${article.id}/submit`} method="POST">
-            <button
-              type="submit"
-              className="inline-flex h-11 items-center rounded-md bg-brand-500 px-5 text-sm font-medium text-white hover:bg-brand-600"
-            >
+            <PillButton type="submit" size="lg">
               Submit for review
-            </button>
+            </PillButton>
           </form>
         )}
         {article.status === 'IN_REVIEW' && (
@@ -135,7 +134,7 @@ export default async function ArticleDetailPage({
               <input type="hidden" name="decision" value="approved" />
               <button
                 type="submit"
-                className="inline-flex h-11 items-center rounded-md bg-success-base px-5 text-sm font-medium text-white hover:opacity-90"
+                className="bg-success-base text-paper inline-flex h-11 items-center rounded-full px-6 text-sm font-medium transition-opacity hover:opacity-90"
               >
                 Approve
               </button>
@@ -144,7 +143,7 @@ export default async function ArticleDetailPage({
               <input type="hidden" name="decision" value="changes_requested" />
               <button
                 type="submit"
-                className="inline-flex h-11 items-center rounded-md border border-warning-base bg-white px-5 text-sm font-medium text-warning-text hover:bg-warning-bg"
+                className="border-warning-base bg-paper text-warning-text hover:bg-warning-bg inline-flex h-11 items-center rounded-full border px-6 text-sm font-medium transition-colors"
               >
                 Request changes
               </button>
@@ -154,18 +153,18 @@ export default async function ArticleDetailPage({
       </div>
 
       <div className="mb-10">
-        <h2 className="mb-3 text-lg font-semibold text-neutral-800">Content</h2>
-        <div className="prose prose-sm max-w-none rounded-lg border border-neutral-200 bg-white p-6">
+        <h2 className="text-ink mb-3 text-lg font-semibold">Content</h2>
+        <Card padded className="prose prose-sm max-w-none">
           <RichTextDisplay content={version.content as Record<string, unknown>} />
-        </div>
+        </Card>
       </div>
 
       <div>
-        <h2 className="mb-3 text-lg font-semibold text-neutral-800">Version history</h2>
-        <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
+        <h2 className="text-ink mb-3 text-lg font-semibold">Version history</h2>
+        <Card padded={false} className="overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-neutral-200 bg-neutral-50 text-left text-sm font-medium text-neutral-600">
+              <tr className="border-hairline bg-cool-wash text-deep-gray border-b text-left text-sm font-medium">
                 <th className="px-4 py-3">Version</th>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Notes</th>
@@ -174,20 +173,20 @@ export default async function ArticleDetailPage({
             </thead>
             <tbody>
               {versions.map((v) => (
-                <tr key={v.id} className="border-b border-neutral-100 text-sm last:border-b-0">
-                  <td className="px-4 py-3 font-medium text-neutral-900">v{v.version}</td>
+                <tr key={v.id} className="border-hairline border-b text-sm last:border-b-0">
+                  <td className="text-ink px-4 py-3 font-medium">v{v.version}</td>
                   <td className="px-4 py-3">
                     <ApprovalBadge status={v.status as ApprovalBadgeStatus} />
                   </td>
-                  <td className="px-4 py-3 text-neutral-600">{v.changeNotes ?? '—'}</td>
-                  <td className="px-4 py-3 text-neutral-400">
+                  <td className="text-deep-gray px-4 py-3">{v.changeNotes ?? '—'}</td>
+                  <td className="text-quiet-dot px-4 py-3">
                     {new Date(v.createdAt).toLocaleDateString('en-GB')}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
+        </Card>
       </div>
     </div>
   );

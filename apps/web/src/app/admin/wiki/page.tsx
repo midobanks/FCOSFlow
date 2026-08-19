@@ -6,6 +6,8 @@ import { LogoutButton } from '@/components/LogoutButton';
 import { DeleteArticleButton } from '@/components/DeleteArticleButton';
 import { getArticlesByOrganization } from '@fcos/application';
 import { getAuthContext } from '@/lib/auth-context';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Card } from '@/components/ui/Card';
 
 type Article = {
   id: string;
@@ -36,25 +38,27 @@ export default async function AdminWikiPage() {
   const articles: any[] = result.ok ? result.data.articles : [];
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-8">
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-900">Admin — Articles</h1>
-          <p className="mt-1 text-sm text-neutral-500">{articles.length} article{articles.length === 1 ? '' : 's'}</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href="/admin/wiki/new"
-            className="inline-flex h-11 items-center rounded-md bg-brand-500 px-5 text-sm font-medium text-white hover:bg-brand-600">
-            New article
-          </Link>
-          <LogoutButton />
-        </div>
-      </div>
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+      <PageHeader
+        title="Admin — Articles"
+        subtitle={`${articles.length} article${articles.length === 1 ? '' : 's'}`}
+        action={
+          <div className="flex items-center gap-3">
+            <Link
+              href="/admin/wiki/new"
+              className="bg-electric-blue text-paper inline-flex items-center rounded-full px-5 py-2.5 text-sm font-medium transition-colors hover:opacity-90"
+            >
+              New article
+            </Link>
+            <LogoutButton />
+          </div>
+        }
+      />
 
-      <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
+      <Card padded={false} className="overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-neutral-200 bg-neutral-50 text-left text-sm font-medium text-neutral-600">
+            <tr className="border-hairline bg-cool-wash text-deep-gray border-b text-left text-sm font-medium">
               <th className="px-4 py-3">Title</th>
               <th className="px-4 py-3">Process area</th>
               <th className="px-4 py-3">Status</th>
@@ -65,25 +69,33 @@ export default async function AdminWikiPage() {
           </thead>
           <tbody>
             {articles.map((article: any) => (
-              <tr key={article.id} className="border-b border-neutral-100 text-sm last:border-b-0 hover:bg-neutral-25">
+              <tr
+                key={article.id}
+                className="border-hairline hover:bg-cool-wash border-b text-sm last:border-b-0"
+              >
                 <td className="px-4 py-3">
-                  <Link href={`/admin/wiki/${article.id}`} className="font-medium text-neutral-900 hover:text-brand-500">
+                  <Link
+                    href={`/admin/wiki/${article.id}`}
+                    className="text-ink hover:text-link-blue font-medium"
+                  >
                     {article.title}
                   </Link>
                 </td>
-                <td className="px-4 py-3 text-neutral-600">{article.processArea ?? '—'}</td>
+                <td className="text-deep-gray px-4 py-3">{article.processArea ?? '—'}</td>
                 <td className="px-4 py-3">
-                  <ApprovalBadge status={mapStatusToBadge(article.status, article.governanceLevel)} />
+                  <ApprovalBadge
+                    status={mapStatusToBadge(article.status, article.governanceLevel)}
+                  />
                 </td>
-                <td className="px-4 py-3 uppercase text-neutral-600">{article.language}</td>
-                <td className="px-4 py-3 text-neutral-400">
+                <td className="text-deep-gray px-4 py-3 uppercase">{article.language}</td>
+                <td className="text-quiet-dot px-4 py-3">
                   {new Date(article.updatedAt).toLocaleDateString('en-GB')}
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/admin/wiki/${article.id}`}
-                      className="rounded px-2 py-1 text-xs font-medium text-brand-500 hover:bg-brand-50"
+                      className="text-link-blue hover:bg-cool-wash rounded px-2 py-1 text-xs font-medium"
                     >
                       Edit
                     </Link>
@@ -94,14 +106,14 @@ export default async function AdminWikiPage() {
             ))}
             {articles.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-12 text-center text-neutral-400">
+                <td colSpan={6} className="text-quiet-dot px-4 py-12 text-center">
                   No articles yet. Click &quot;New article&quot; to create one.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
-      </div>
+      </Card>
     </div>
   );
 }

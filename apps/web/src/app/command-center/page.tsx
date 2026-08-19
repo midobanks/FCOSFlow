@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { getBaseUrl } from '@/lib/base-url';
 import { MetricCard } from '@/components/MetricCard';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Card } from '@/components/ui/Card';
 
 type Tile = {
   id: string;
@@ -32,31 +34,31 @@ export default async function CommandCenterPage() {
   const data = await getDashboard();
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-8">
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-900">Dashboard</h1>
-          <p className="mt-1 text-sm text-neutral-600">Live site and shift health overview</p>
-        </div>
-        <div className="flex items-center gap-3">
-          {data && (
-            <span className="text-xs text-neutral-400">
-              Refreshed: {new Date(data.refreshedAt).toLocaleTimeString()}
-            </span>
-          )}
-          <Link
-            href="/command-center/wallboard"
-            className="inline-flex h-10 items-center rounded-md border border-neutral-200 bg-white px-4 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
-          >
-            Wallboard mode
-          </Link>
-        </div>
-      </div>
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+      <PageHeader
+        title="Dashboard"
+        subtitle="Live site and shift health overview"
+        action={
+          <div className="flex items-center gap-3">
+            {data && (
+              <span className="text-quiet-dot text-xs">
+                Refreshed: {new Date(data.refreshedAt).toLocaleTimeString()}
+              </span>
+            )}
+            <Link
+              href="/command-center/wallboard"
+              className="border-ink/15 bg-paper text-ink hover:bg-cool-wash inline-flex items-center rounded-full border px-5 py-2.5 text-sm font-medium transition-colors"
+            >
+              Wallboard mode
+            </Link>
+          </div>
+        }
+      />
 
       {!data ? (
-        <div className="rounded-lg border border-neutral-200 bg-white p-12 text-center">
-          <p className="text-neutral-400">Unable to load Dashboard.</p>
-        </div>
+        <Card padded={false} className="p-12 text-center">
+          <p className="text-quiet-dot">Unable to load Dashboard.</p>
+        </Card>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {data.tiles.map((tile) => (
@@ -75,4 +77,3 @@ export default async function CommandCenterPage() {
     </div>
   );
 }
-

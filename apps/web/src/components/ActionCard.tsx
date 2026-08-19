@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { Card } from '@/components/ui/Card';
+import { StatusPill, type StatusTone } from '@/components/ui/StatusPill';
 
 type ActionCardProps = {
   id: string;
@@ -11,17 +13,30 @@ type ActionCardProps = {
   link?: string;
 };
 
-const statusStyles: Record<string, string> = {
-  pending: 'border-l-neutral-400 bg-neutral-25',
-  completed: 'border-l-success-base bg-success-bg',
-  overdue: 'border-l-danger-base bg-danger-bg',
-  in_progress: 'border-l-brand-500 bg-brand-50',
+const statusToTone: Record<string, StatusTone> = {
+  pending: 'neutral',
+  completed: 'success',
+  overdue: 'danger',
+  in_progress: 'brand',
+};
+
+const statusLabel: Record<string, string> = {
+  pending: 'Pending',
+  completed: 'Completed',
+  overdue: 'Overdue',
+  in_progress: 'In progress',
 };
 
 const priorityLabel: Record<string, string> = {
   high: 'High',
   medium: 'Medium',
   low: 'Low',
+};
+
+const priorityClasses: Record<string, string> = {
+  high: 'bg-danger-bg text-danger-text',
+  medium: 'bg-warning-bg text-warning-text',
+  low: 'bg-cool-wash text-deep-gray',
 };
 
 export function ActionCard({
@@ -35,15 +50,21 @@ export function ActionCard({
   link,
 }: ActionCardProps) {
   const content = (
-    <div className={`rounded-lg border border-neutral-200 p-4 border-l-4 ${statusStyles[status] ?? statusStyles.pending}`}>
-      <div className="flex items-start justify-between">
+    <Card className="transition-colors">
+      <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-neutral-900">{title}</h3>
-          <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-neutral-500">
+          <h3 className="text-ink text-sm font-semibold">{title}</h3>
+          <div className="text-mid-gray mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
             <span>Owner: {owner}</span>
             {dueTime && (
               <span className={status === 'overdue' ? 'text-danger-base font-medium' : ''}>
-                Due: {new Date(dueTime).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                Due:{' '}
+                {new Date(dueTime).toLocaleDateString('en-GB', {
+                  day: 'numeric',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
               </span>
             )}
             {source && <span>Source: {source}</span>}
@@ -51,22 +72,27 @@ export function ActionCard({
         </div>
         <div className="ml-4 flex flex-col items-end gap-1.5">
           {priority && (
-            <span className={`rounded px-2 py-0.5 text-xs font-medium ${
-              priority === 'high' ? 'bg-danger-bg text-danger-text'
-              : priority === 'medium' ? 'bg-warning-bg text-warning-text'
-              : 'bg-neutral-100 text-neutral-600'
-            }`}>
+            <span
+              className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${priorityClasses[priority] ?? priorityClasses.low}`}
+            >
               {priorityLabel[priority]}
             </span>
           )}
-          <span className="text-xs capitalize text-neutral-400">{status.replace('_', ' ')}</span>
+          <StatusPill
+            tone={statusToTone[status] ?? 'neutral'}
+            label={statusLabel[status] ?? status}
+          />
         </div>
       </div>
-    </div>
+    </Card>
   );
 
   if (link) {
-    return <Link href={link} className="block">{content}</Link>;
+    return (
+      <Link href={link} className="block">
+        {content}
+      </Link>
+    );
   }
 
   return content;

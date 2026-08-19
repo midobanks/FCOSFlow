@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getBaseUrl } from '@/lib/base-url';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Card } from '@/components/ui/Card';
+import { StatusPill } from '@/components/ui/StatusPill';
 
 type Amendment = {
   id: string;
@@ -35,23 +38,12 @@ async function getHandover(id: string): Promise<Handover | null> {
 }
 
 function statusBadge(status: string) {
-  const styles: Record<string, string> = {
-    PENDING: 'bg-neutral-100 text-neutral-600',
-    SUBMITTED: 'bg-warning-bg text-warning-text',
-    ACKNOWLEDGED: 'bg-success-bg text-success-text',
-  };
-  return (
-    <span className={`rounded px-2.5 py-0.5 text-xs font-medium ${styles[status] ?? styles.PENDING}`}>
-      {status}
-    </span>
-  );
+  const tone =
+    status === 'ACKNOWLEDGED' ? 'success' : status === 'SUBMITTED' ? 'warning' : 'neutral';
+  return <StatusPill tone={tone} label={status} />;
 }
 
-export default async function HandoverDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function HandoverDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const handover = await getHandover(id);
 
@@ -60,51 +52,46 @@ export default async function HandoverDetailPage({
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <div className="mb-6">
-        <Link href="/handovers" className="text-sm text-brand-500 hover:text-brand-600">
+        <Link href="/handovers" className="text-link-blue text-sm hover:underline">
           &larr; All handovers
         </Link>
       </div>
 
-      <div className="mb-6 flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-900">{handover.shift.name}</h1>
-          <p className="mt-1 text-sm text-neutral-600">
-            {new Date(handover.shift.startTime).toLocaleDateString('en-GB', {
-              weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-            })}
-          </p>
-        </div>
-        {statusBadge(handover.status)}
-      </div>
+      <PageHeader
+        title={handover.shift.name}
+        subtitle={new Date(handover.shift.startTime).toLocaleDateString('en-GB', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })}
+        action={statusBadge(handover.status)}
+      />
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-lg bg-neutral-50 p-4">
-          <p className="text-xs font-medium text-neutral-500">Outgoing Captain</p>
-          <p className="mt-1 text-sm font-medium text-neutral-900">{handover.outgoingUser.name}</p>
-        </div>
-        <div className="rounded-lg bg-neutral-50 p-4">
-          <p className="text-xs font-medium text-neutral-500">Incoming Captain</p>
-          <p className="mt-1 text-sm font-medium text-neutral-900">
-            {handover.incomingUser?.name ?? '—'}
-          </p>
-        </div>
+        <Card>
+          <p className="text-mid-gray text-xs font-medium">Outgoing Captain</p>
+          <p className="text-ink mt-1 text-sm font-medium">{handover.outgoingUser.name}</p>
+        </Card>
+        <Card>
+          <p className="text-mid-gray text-xs font-medium">Incoming Captain</p>
+          <p className="text-ink mt-1 text-sm font-medium">{handover.incomingUser?.name ?? '—'}</p>
+        </Card>
       </div>
 
       {handover.notes && (
         <div className="mb-6">
-          <h2 className="mb-2 text-sm font-semibold text-neutral-800">Notes</h2>
-          <div className="rounded-lg border border-neutral-200 bg-white p-4 text-sm text-neutral-700">
-            {handover.notes}
-          </div>
+          <h2 className="text-caption text-ink mb-2 font-semibold">Notes</h2>
+          <Card className="text-deep-gray text-sm">{handover.notes}</Card>
         </div>
       )}
 
       {handover.riskSummary && (
         <div className="mb-6">
-          <h2 className="mb-2 text-sm font-semibold text-danger-text">Unresolved risks</h2>
-          <div className="rounded-lg border border-danger-bg bg-danger-bg/50 p-4 text-sm text-neutral-700">
+          <h2 className="text-caption text-danger-text mb-2 font-semibold">Unresolved risks</h2>
+          <div className="border-danger-bg bg-danger-bg/50 text-deep-gray rounded-3xl border p-5 text-sm">
             {handover.riskSummary}
           </div>
         </div>
@@ -112,28 +99,28 @@ export default async function HandoverDetailPage({
 
       {handover.priorityActions && (
         <div className="mb-6">
-          <h2 className="mb-2 text-sm font-semibold text-neutral-800">Priority actions</h2>
-          <div className="rounded-lg border border-warning-bg bg-warning-bg/50 p-4 text-sm text-neutral-700">
+          <h2 className="text-caption text-ink mb-2 font-semibold">Priority actions</h2>
+          <div className="border-warning-bg bg-warning-bg/50 text-deep-gray rounded-3xl border p-5 text-sm">
             {handover.priorityActions}
           </div>
         </div>
       )}
 
       <div>
-        <h2 className="mb-3 text-lg font-semibold text-neutral-800">
+        <h2 className="text-caption text-ink mb-3 font-semibold">
           Amendments ({handover.amendments.length})
         </h2>
         <div className="space-y-2">
           {handover.amendments.length === 0 ? (
-            <p className="text-sm text-neutral-400">No amendments.</p>
+            <p className="text-quiet-dot text-sm">No amendments.</p>
           ) : (
             handover.amendments.map((a) => (
-              <div key={a.id} className="rounded-lg border border-neutral-200 bg-white p-3">
-                <p className="text-sm text-neutral-700">{a.content}</p>
-                <p className="mt-1 text-xs text-neutral-400">
+              <Card key={a.id} padded={false} className="text-deep-gray p-4 text-sm">
+                <p>{a.content}</p>
+                <p className="text-quiet-dot mt-1 text-xs">
                   {a.user.name} &middot; {new Date(a.createdAt).toLocaleString()}
                 </p>
-              </div>
+              </Card>
             ))
           )}
         </div>

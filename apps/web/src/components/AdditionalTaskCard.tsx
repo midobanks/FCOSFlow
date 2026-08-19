@@ -2,6 +2,8 @@
 
 import { calculateTaskShoppers, type AdditionalTask } from './AdditionalTaskCalculator';
 import { formatShoppers } from '@/lib/shift-math';
+import { Card } from '@/components/ui/Card';
+import { Field, inputClass } from '@/components/ui/Field';
 
 export { calculateTaskShoppers, type AdditionalTask };
 
@@ -9,9 +11,6 @@ type AdditionalTaskCardProps = {
   task: AdditionalTask;
   onChange: (task: AdditionalTask) => void;
 };
-
-const inputClass =
-  'mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500';
 
 function timeToHours(time: string): number | null {
   if (!time) return null;
@@ -35,42 +34,68 @@ export function AdditionalTaskCard({ task, onChange }: AdditionalTaskCardProps) 
   const formattedShoppers = shoppers != null ? formatShoppers(shoppers) : null;
 
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-5">
+    <Card>
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-sm font-semibold text-neutral-700">{task.name}</h3>
-        <span className={`rounded-md px-2.5 py-1 text-base font-bold ${shoppers ? 'bg-brand-50 text-brand-500' : 'bg-neutral-50 text-neutral-300'}`}>
-          {formattedShoppers != null ? `${formattedShoppers} shopper${formattedShoppers === 1 ? '' : 's'}` : '—'}
+        <h3 className="text-caption text-ink font-semibold">{task.name}</h3>
+        <span
+          className={`rounded-full px-3 py-1 text-sm font-bold tabular-nums ${
+            shoppers ? 'bg-brand-50 text-brand-600' : 'bg-cool-wash text-quiet-dot'
+          }`}
+        >
+          {formattedShoppers != null
+            ? `${formattedShoppers} shopper${formattedShoppers === 1 ? '' : 's'}`
+            : '—'}
         </span>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div>
-          <label className="text-xs font-medium text-neutral-600">Hours needed</label>
-          <input type="number" min="0" step="0.5" value={task.hours} placeholder="0" onChange={(e) => update('hours', e.target.value)}
-            className={inputClass} />
-        </div>
-        <div>
-          <label className="text-xs font-medium text-neutral-600">Start time</label>
-          <input type="time" value={task.startTime} onChange={(e) => update('startTime', e.target.value)}
-            className={`${inputClass} min-w-0`} />
-        </div>
-        <div>
-          <label className="text-xs font-medium text-neutral-600">End time</label>
-          <input type="time" value={task.endTime} onChange={(e) => update('endTime', e.target.value)}
-            className={`${inputClass} min-w-0`} />
-        </div>
-        <div>
-          <label className="text-xs font-medium text-neutral-600">Break (min)</label>
-          <input type="number" min="0" value={task.breakMinutes} onChange={(e) => update('breakMinutes', e.target.value)}
-            className={inputClass} />
-        </div>
+      <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <Field label="Hours needed">
+          <input
+            type="number"
+            min="0"
+            step="0.5"
+            value={task.hours}
+            placeholder="0"
+            onChange={(e) => update('hours', e.target.value)}
+            className={inputClass}
+          />
+        </Field>
+        <Field label="Start time">
+          <input
+            type="time"
+            value={task.startTime}
+            onChange={(e) => update('startTime', e.target.value)}
+            className={inputClass}
+          />
+        </Field>
+        <Field label="End time">
+          <input
+            type="time"
+            value={task.endTime}
+            onChange={(e) => update('endTime', e.target.value)}
+            className={inputClass}
+          />
+        </Field>
+        <Field label="Break (min)">
+          <input
+            type="number"
+            min="0"
+            value={task.breakMinutes}
+            onChange={(e) => update('breakMinutes', e.target.value)}
+            className={inputClass}
+          />
+        </Field>
       </div>
 
       {showBreakdown && (
-        <p className="mt-3 text-xs text-neutral-500">
-          {windowHours.toFixed(1)} h window &minus; {breakHours > 0 ? `${(breakHours * 60).toFixed(0)} min break = ${productiveHours.toFixed(1)} h` : `${productiveHours.toFixed(1)} h`} per shopper &rarr; {formattedShoppers}
+        <p className="text-mid-gray mt-4 text-xs">
+          {windowHours.toFixed(1)} h window &minus;{' '}
+          {breakHours > 0
+            ? `${(breakHours * 60).toFixed(0)} min break = ${productiveHours.toFixed(1)} h`
+            : `${productiveHours.toFixed(1)} h`}{' '}
+          per shopper &rarr; {formattedShoppers}
         </p>
       )}
-    </div>
+    </Card>
   );
 }

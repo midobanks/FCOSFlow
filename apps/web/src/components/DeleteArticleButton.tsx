@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { PillButton } from '@/components/ui/PillButton';
 
 type DeleteArticleButtonProps = {
   articleId: string;
@@ -31,19 +32,20 @@ export function DeleteArticleButton({ articleId, articleTitle }: DeleteArticleBu
 
   if (confirm) {
     return (
-      <div className="flex items-center gap-1.5">
-        <button
+      <div className="flex items-center gap-2">
+        <PillButton
           type="button"
+          variant="danger"
+          size="sm"
           onClick={handleDelete}
           disabled={loading}
-          className="rounded px-2 py-1 text-xs font-medium text-white bg-danger-base hover:opacity-90 disabled:opacity-50"
         >
           {loading ? '...' : 'Confirm'}
-        </button>
+        </PillButton>
         <button
           type="button"
           onClick={() => setConfirm(false)}
-          className="rounded px-2 py-1 text-xs text-neutral-500 hover:text-neutral-700"
+          className="text-mid-gray hover:text-deep-gray text-sm font-medium transition-colors"
         >
           Cancel
         </button>
@@ -55,7 +57,7 @@ export function DeleteArticleButton({ articleId, articleTitle }: DeleteArticleBu
     <button
       type="button"
       onClick={() => setConfirm(true)}
-      className="rounded px-2 py-1 text-xs font-medium text-danger-text hover:bg-danger-bg"
+      className="text-danger-base hover:bg-danger-bg rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
       title={`Delete ${articleTitle}`}
     >
       Delete

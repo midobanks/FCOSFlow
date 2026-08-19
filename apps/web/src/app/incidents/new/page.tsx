@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Field, inputClass } from '@/components/ui/Field';
+import { PillButton } from '@/components/ui/PillButton';
 
 export default function NewIncidentPage() {
   const router = useRouter();
@@ -48,70 +51,106 @@ export default function NewIncidentPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-8">
-      <h1 className="text-2xl font-bold text-neutral-900">New incident</h1>
-      <p className="mt-1 text-sm text-neutral-600">Document a safety incident.</p>
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+      <PageHeader title="New incident" subtitle="Document a safety incident." />
 
       {error && (
-        <div className="mt-4 rounded-md bg-danger-bg p-3 text-sm text-danger-text">{error}</div>
+        <div className="bg-danger-bg text-danger-text mb-6 rounded-lg p-3 text-sm">{error}</div>
       )}
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="submittedBy" className="label-md block text-sm font-medium text-neutral-800">Submitted by</label>
-            <input id="submittedBy" value={submittedBy} onChange={(e) => setSubmittedBy(e.target.value)} required
-              className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" />
-          </div>
-          <div>
-            <label htmlFor="injuredPersonName" className="label-md block text-sm font-medium text-neutral-800">Injured person</label>
-            <input id="injuredPersonName" value={injuredPersonName} onChange={(e) => setInjuredPersonName(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" />
-          </div>
+          <Field label="Submitted by">
+            <input
+              id="submittedBy"
+              value={submittedBy}
+              onChange={(e) => setSubmittedBy(e.target.value)}
+              required
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Injured person">
+            <input
+              id="injuredPersonName"
+              value={injuredPersonName}
+              onChange={(e) => setInjuredPersonName(e.target.value)}
+              className={inputClass}
+            />
+          </Field>
         </div>
 
-        <div>
-          <label htmlFor="incidentType" className="label-md block text-sm font-medium text-neutral-800">Incident type</label>
-          <select id="incidentType" value={incidentType} onChange={(e) => setIncidentType(e.target.value)} required
-            className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+        <Field label="Incident type">
+          <select
+            id="incidentType"
+            value={incidentType}
+            onChange={(e) => setIncidentType(e.target.value)}
+            required
+            className={inputClass}
+          >
             <option value="LTI">Lost Time Injury (LTI)</option>
             <option value="NM">Near Miss (NM)</option>
             <option value="PHI">PHI</option>
             <option value="MI">MI</option>
           </select>
-        </div>
+        </Field>
 
-        <div>
-          <label htmlFor="description" className="label-md block text-sm font-medium text-neutral-800">Description</label>
-          <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} rows={4}
-            className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" />
-        </div>
+        <Field label="Description">
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={4}
+            className={inputClass}
+          />
+        </Field>
 
-        <fieldset className="rounded-lg border border-neutral-200 bg-neutral-50 p-4">
-          <legend className="text-sm font-medium text-neutral-800">Additional details</legend>
+        <fieldset className="border-hairline bg-paper rounded-3xl border p-5 sm:p-6">
+          <legend className="text-caption text-ink font-semibold">Additional details</legend>
           <div className="mt-4 space-y-4">
             <label className="flex items-center gap-3">
-              <input type="checkbox" checked={ambulanceOnSite} onChange={(e) => setAmbulanceOnSite(e.target.checked)}
-                className="h-4 w-4 rounded border-neutral-300 text-brand-500" />
-              <span className="text-sm text-neutral-700">Ambulance on site?</span>
+              <input
+                type="checkbox"
+                checked={ambulanceOnSite}
+                onChange={(e) => setAmbulanceOnSite(e.target.checked)}
+                className="border-hairline accent-brand-500 h-4 w-4 rounded"
+              />
+              <span className="text-deep-gray text-sm">Ambulance on site?</span>
             </label>
             <div>
-              <p className="mb-2 text-sm text-neutral-700">Did the person finish the shift?</p>
+              <p className="text-deep-gray mb-2 text-sm">Did the person finish the shift?</p>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2">
-                  <input type="radio" name="finishedShift" value="yes" checked={finishedShift === 'yes'} onChange={(e) => setFinishedShift(e.target.value)}
-                    className="h-4 w-4 border-neutral-300 text-brand-500" />
-                  <span className="text-sm text-neutral-700">Yes</span>
+                  <input
+                    type="radio"
+                    name="finishedShift"
+                    value="yes"
+                    checked={finishedShift === 'yes'}
+                    onChange={(e) => setFinishedShift(e.target.value)}
+                    className="border-hairline accent-brand-500 h-4 w-4"
+                  />
+                  <span className="text-deep-gray text-sm">Yes</span>
                 </label>
                 <label className="flex items-center gap-2">
-                  <input type="radio" name="finishedShift" value="no" checked={finishedShift === 'no'} onChange={(e) => setFinishedShift(e.target.value)}
-                    className="h-4 w-4 border-neutral-300 text-brand-500" />
-                  <span className="text-sm text-neutral-700">No</span>
+                  <input
+                    type="radio"
+                    name="finishedShift"
+                    value="no"
+                    checked={finishedShift === 'no'}
+                    onChange={(e) => setFinishedShift(e.target.value)}
+                    className="border-hairline accent-brand-500 h-4 w-4"
+                  />
+                  <span className="text-deep-gray text-sm">No</span>
                 </label>
                 <label className="flex items-center gap-2">
-                  <input type="radio" name="finishedShift" value="" checked={finishedShift === ''} onChange={(e) => setFinishedShift(e.target.value)}
-                    className="h-4 w-4 border-neutral-300 text-brand-500" />
-                  <span className="text-sm text-neutral-700">N/A</span>
+                  <input
+                    type="radio"
+                    name="finishedShift"
+                    value=""
+                    checked={finishedShift === ''}
+                    onChange={(e) => setFinishedShift(e.target.value)}
+                    className="border-hairline accent-brand-500 h-4 w-4"
+                  />
+                  <span className="text-deep-gray text-sm">N/A</span>
                 </label>
               </div>
             </div>
@@ -119,12 +158,13 @@ export default function NewIncidentPage() {
         </fieldset>
 
         <div className="flex gap-4">
-          <button type="submit" disabled={submitting}
-            className="inline-flex h-11 items-center rounded-md bg-brand-500 px-5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50">
+          <PillButton type="submit" size="lg" disabled={submitting}>
             {submitting ? 'Saving...' : 'Log incident'}
-          </button>
-          <a href="/incidents"
-            className="inline-flex h-11 items-center rounded-md border border-neutral-200 bg-white px-5 text-sm font-medium text-neutral-700 hover:bg-neutral-50">
+          </PillButton>
+          <a
+            href="/incidents"
+            className="border-ink/15 bg-paper text-ink hover:bg-cool-wash inline-flex h-11 items-center justify-center rounded-full border px-6 text-sm font-medium transition-colors"
+          >
             Cancel
           </a>
         </div>

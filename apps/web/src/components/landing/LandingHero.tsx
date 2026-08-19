@@ -34,7 +34,7 @@ export function LandingHero() {
         </p>
       </div>
 
-      <div className="bg-[linear-gradient(184deg,#1d1d1f_0%,#0a3f3b_58%,#0f766e_100%)] relative mt-16 overflow-hidden sm:mt-20">
+      <div className="relative mt-16 overflow-hidden bg-[linear-gradient(184deg,#1d1d1f_0%,#0a3f3b_58%,#0f766e_100%)] sm:mt-20">
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(105,195,188,0.35),transparent_70%)]"
           aria-hidden="true"

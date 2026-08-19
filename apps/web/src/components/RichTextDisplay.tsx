@@ -9,19 +9,44 @@ function renderMarks(marks: any[] | undefined, children: React.ReactNode): React
   for (const mark of marks) {
     switch (mark.type) {
       case 'bold':
-        result = <strong key={mark.type} className="font-semibold">{result}</strong>;
+        result = (
+          <strong key={mark.type} className="font-semibold">
+            {result}
+          </strong>
+        );
         break;
       case 'italic':
         result = <em key={mark.type}>{result}</em>;
         break;
       case 'underline':
-        result = <span key={mark.type} className="underline">{result}</span>;
+        result = (
+          <span key={mark.type} className="underline">
+            {result}
+          </span>
+        );
         break;
       case 'link':
-        result = <a key={mark.type} href={mark.attrs?.href} className="text-brand-500 underline hover:text-brand-600" target="_blank" rel="noopener noreferrer">{result}</a>;
+        result = (
+          <a
+            key={mark.type}
+            href={mark.attrs?.href}
+            className="text-link-blue hover:text-link-blue underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {result}
+          </a>
+        );
         break;
       case 'code':
-        result = <code key={mark.type} className="rounded bg-neutral-100 px-1 py-0.5 text-sm font-mono">{result}</code>;
+        result = (
+          <code
+            key={mark.type}
+            className="bg-cool-wash text-ink rounded px-1 py-0.5 font-mono text-sm"
+          >
+            {result}
+          </code>
+        );
         break;
       default:
         result = <span key={mark.type}>{result}</span>;
@@ -34,40 +59,79 @@ function renderNode(node: any, key: number): React.ReactNode {
   if (!node || typeof node !== 'object') return null;
 
   if (node.type === 'doc') {
-    return <div className="space-y-4">{node.content?.map((child: any, i: number) => renderNode(child, i))}</div>;
+    return (
+      <div className="space-y-4">
+        {node.content?.map((child: any, i: number) => renderNode(child, i))}
+      </div>
+    );
   }
 
-  const children = node.content?.map((child: any, i: number) => {
-    if (child.type === 'text') {
-      return renderMarks(child.marks, child.text ?? '');
-    }
-    return renderNode(child, i);
-  }) ?? null;
+  const children =
+    node.content?.map((child: any, i: number) => {
+      if (child.type === 'text') {
+        return renderMarks(child.marks, child.text ?? '');
+      }
+      return renderNode(child, i);
+    }) ?? null;
 
   const textAlign = node.attrs?.textAlign;
   const alignClass = textAlign && textAlign !== 'left' ? `text-${textAlign}` : '';
 
   switch (node.type) {
     case 'paragraph':
-      return <p key={key} className={`text-neutral-800 ${alignClass}`}>{children}</p>;
+      return (
+        <p key={key} className={`text-ink ${alignClass}`}>
+          {children}
+        </p>
+      );
     case 'heading': {
       const level = node.attrs?.level ?? 2;
       const sizes = ['', 'text-xl font-bold', 'text-lg font-semibold', 'text-base font-semibold'];
-      const className = `mt-6 mb-3 text-neutral-900 ${sizes[level] ?? sizes[2]} ${alignClass}`;
-      if (level === 1) return <h1 key={key} className={className}>{children}</h1>;
-      if (level === 2) return <h2 key={key} className={className}>{children}</h2>;
-      return <h3 key={key} className={className}>{children}</h3>;
+      const className = `mt-6 mb-3 text-ink ${sizes[level] ?? sizes[2]} ${alignClass}`;
+      if (level === 1)
+        return (
+          <h1 key={key} className={className}>
+            {children}
+          </h1>
+        );
+      if (level === 2)
+        return (
+          <h2 key={key} className={className}>
+            {children}
+          </h2>
+        );
+      return (
+        <h3 key={key} className={className}>
+          {children}
+        </h3>
+      );
     }
     case 'bulletList':
-      return <ul key={key} className="list-disc pl-6 space-y-1 text-neutral-800">{children}</ul>;
+      return (
+        <ul key={key} className="text-ink list-disc space-y-1 pl-6">
+          {children}
+        </ul>
+      );
     case 'orderedList':
-      return <ol key={key} className="list-decimal pl-6 space-y-1 text-neutral-800">{children}</ol>;
+      return (
+        <ol key={key} className="text-ink list-decimal space-y-1 pl-6">
+          {children}
+        </ol>
+      );
     case 'listItem':
       return <li key={key}>{children}</li>;
     case 'blockquote':
-      return <blockquote key={key} className="border-l-4 border-neutral-300 pl-4 italic text-neutral-600">{children}</blockquote>;
+      return (
+        <blockquote key={key} className="border-hairline text-deep-gray border-l-4 pl-4 italic">
+          {children}
+        </blockquote>
+      );
     case 'codeBlock':
-      return <pre key={key} className="overflow-x-auto rounded-lg bg-neutral-900 p-4 text-sm text-neutral-100"><code>{node.content?.[0]?.text ?? ''}</code></pre>;
+      return (
+        <pre key={key} className="bg-ink text-paper overflow-x-auto rounded-lg p-4 text-sm">
+          <code>{node.content?.[0]?.text ?? ''}</code>
+        </pre>
+      );
     case 'image':
       return (
         <figure key={key} className="my-4">
@@ -76,11 +140,15 @@ function renderNode(node: any, key: number): React.ReactNode {
             alt={node.attrs?.alt ?? ''}
             className="mx-auto max-w-full rounded-lg"
           />
-          {node.attrs?.title && <figcaption className="mt-1 text-center text-xs text-neutral-500">{node.attrs.title}</figcaption>}
+          {node.attrs?.title && (
+            <figcaption className="text-mid-gray mt-1 text-center text-xs">
+              {node.attrs.title}
+            </figcaption>
+          )}
         </figure>
       );
     case 'horizontalRule':
-      return <hr key={key} className="my-6 border-neutral-200" />;
+      return <hr key={key} className="border-hairline my-6" />;
     case 'text':
       return renderMarks(node.marks, node.text ?? '');
     default:
@@ -90,7 +158,7 @@ function renderNode(node: any, key: number): React.ReactNode {
 
 export function RichTextDisplay({ content }: RichTextDisplayProps) {
   if (!content || Object.keys(content).length === 0) {
-    return <p className="text-neutral-400 italic">No content</p>;
+    return <p className="text-quiet-dot italic">No content</p>;
   }
   return <>{renderNode(content, 0)}</>;
 }

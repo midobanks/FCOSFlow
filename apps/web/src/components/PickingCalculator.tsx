@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { formatShoppers } from '@/lib/shift-math';
+import { Card } from '@/components/ui/Card';
+import { Field, inputClass } from '@/components/ui/Field';
 
 type PickingCalculatorProps = {
   zoneName: string;
@@ -28,7 +30,11 @@ type Results = {
   projectedFinish: string;
 };
 
-function calculate(inputs: Inputs, availableHoursPerShopper: number, inactiveMin: number): Results | null {
+function calculate(
+  inputs: Inputs,
+  availableHoursPerShopper: number,
+  inactiveMin: number,
+): Results | null {
   const totalOls = parseFloat(inputs.totalOls);
   const completedOls = parseFloat(inputs.completedOls) || 0;
   const speed = parseFloat(inputs.targetSpeed);
@@ -56,10 +62,23 @@ function calculate(inputs: Inputs, availableHoursPerShopper: number, inactiveMin
     return now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
   })();
 
-  return { remainingOls, baseHours, estimatedRounds, transitionHours, adjustedHours, shoppersNeeded, gap, projectedFinish };
+  return {
+    remainingOls,
+    baseHours,
+    estimatedRounds,
+    transitionHours,
+    adjustedHours,
+    shoppersNeeded,
+    gap,
+    projectedFinish,
+  };
 }
 
-export function PickingCalculator({ zoneName, availableHoursPerShopper, inactiveMinutes }: PickingCalculatorProps) {
+export function PickingCalculator({
+  zoneName,
+  availableHoursPerShopper,
+  inactiveMinutes,
+}: PickingCalculatorProps) {
   const [inputs, setInputs] = useState<Inputs>({
     totalOls: '',
     completedOls: '0',
@@ -78,90 +97,165 @@ export function PickingCalculator({ zoneName, availableHoursPerShopper, inactive
   }
 
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white">
+    <Card padded={false} className="overflow-hidden">
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-neutral-800 hover:bg-neutral-25"
+        className="text-ink hover:bg-cool-wash flex w-full items-center justify-between px-5 py-4 text-left text-sm font-semibold transition-colors"
       >
         <span>Picking calculator</span>
-        <svg className={`h-4 w-4 text-neutral-400 transition-transform ${expanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <svg
+          className={`text-mid-gray h-4 w-4 transition-transform ${expanded ? 'rotate-180' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
       {expanded && (
-        <div className="border-t border-neutral-100 px-4 py-3 space-y-3">
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className="text-xs text-neutral-500">Total OLS</label>
-              <input type="number" min="1" value={inputs.totalOls} onChange={(e) => set('totalOls', e.target.value)}
-                className="mt-0.5 block w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500" />
-            </div>
-            <div>
-              <label className="text-xs text-neutral-500">Completed OLS</label>
-              <input type="number" min="0" value={inputs.completedOls} onChange={(e) => set('completedOls', e.target.value)}
-                className="mt-0.5 block w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500" />
-            </div>
+        <div className="border-hairline space-y-4 border-t px-5 py-4">
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Total OLS">
+              <input
+                type="number"
+                min="1"
+                value={inputs.totalOls}
+                onChange={(e) => set('totalOls', e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Completed OLS">
+              <input
+                type="number"
+                min="0"
+                value={inputs.completedOls}
+                onChange={(e) => set('completedOls', e.target.value)}
+                className={inputClass}
+              />
+            </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className="text-xs text-neutral-500">Target speed (ols/hr)</label>
-              <input type="number" min="1" step="0.1" value={inputs.targetSpeed} onChange={(e) => set('targetSpeed', e.target.value)}
-                className="mt-0.5 block w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500" />
-            </div>
-            <div>
-              <label className="text-xs text-neutral-500">Avg OLS per round</label>
-              <input type="number" min="1" step="0.1" value={inputs.avgLinesPerRound} onChange={(e) => set('avgLinesPerRound', e.target.value)}
-                className="mt-0.5 block w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500" />
-            </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Target speed (ols/hr)">
+              <input
+                type="number"
+                min="1"
+                step="0.1"
+                value={inputs.targetSpeed}
+                onChange={(e) => set('targetSpeed', e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Avg OLS per round">
+              <input
+                type="number"
+                min="1"
+                step="0.1"
+                value={inputs.avgLinesPerRound}
+                onChange={(e) => set('avgLinesPerRound', e.target.value)}
+                className={inputClass}
+              />
+            </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className="text-xs text-neutral-500">Transition (min/round)</label>
-              <input type="number" min="0" step="0.5" value={inputs.transitionMinutes} onChange={(e) => set('transitionMinutes', e.target.value)}
-                className="mt-0.5 block w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500" />
-            </div>
-            <div>
-              <label className="text-xs text-neutral-500">Inactive time</label>
-              <p className="mt-0.5 text-sm font-medium text-neutral-800">{inactiveMinutes} min</p>
-            </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Transition (min/round)">
+              <input
+                type="number"
+                min="0"
+                step="0.5"
+                value={inputs.transitionMinutes}
+                onChange={(e) => set('transitionMinutes', e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Inactive time">
+              <p className="text-deep-gray text-sm font-medium">{inactiveMinutes} min</p>
+            </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className="text-xs text-neutral-500">Assigned Shoppers</label>
-              <input type="number" min="0" value={inputs.assignedShoppers} onChange={(e) => set('assignedShoppers', e.target.value)}
-                className="mt-0.5 block w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500" />
-            </div>
-            <div>
-              <label className="text-xs text-neutral-500">Required end time</label>
-              <input type="time" value={inputs.endTime} onChange={(e) => set('endTime', e.target.value)}
-                className="mt-0.5 block w-full rounded border border-neutral-200 px-2 py-1 text-xs outline-none focus:border-brand-500" />
-            </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Assigned Shoppers">
+              <input
+                type="number"
+                min="0"
+                value={inputs.assignedShoppers}
+                onChange={(e) => set('assignedShoppers', e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Required end time">
+              <input
+                type="time"
+                value={inputs.endTime}
+                onChange={(e) => set('endTime', e.target.value)}
+                className={inputClass}
+              />
+            </Field>
           </div>
 
           {results && (
-            <div className="rounded-md bg-neutral-50 p-3 space-y-1.5 text-xs">
-              <div className="flex justify-between"><span className="text-neutral-500">Remaining OLS</span><span className="font-medium">{results.remainingOls.toLocaleString()}</span></div>
-              <div className="flex justify-between"><span className="text-neutral-500">Base picking hours</span><span className="font-medium">{results.baseHours.toFixed(1)} h</span></div>
-              <div className="flex justify-between"><span className="text-neutral-500">Estimated rounds</span><span className="font-medium">{results.estimatedRounds}</span></div>
-              <div className="flex justify-between"><span className="text-neutral-500">Transition hours</span><span className="font-medium">{results.transitionHours.toFixed(1)} h</span></div>
-              <div className="flex justify-between border-t border-neutral-200 pt-1.5"><span className="font-medium text-neutral-700">Adjusted labour hours</span><span className="font-semibold">{results.adjustedHours.toFixed(1)} h</span></div>
-              <div className="flex justify-between"><span className="font-medium text-neutral-700">Shoppers needed</span><span className="text-lg font-bold text-brand-500">{results.shoppersNeeded}</span></div>
+            <div className="bg-canvas space-y-1.5 rounded-2xl p-4 text-xs">
+              <div className="flex justify-between">
+                <span className="text-mid-gray">Remaining OLS</span>
+                <span className="text-brand-600 font-medium tabular-nums">
+                  {results.remainingOls.toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-mid-gray">Base picking hours</span>
+                <span className="text-brand-600 font-medium tabular-nums">
+                  {results.baseHours.toFixed(1)} h
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-mid-gray">Estimated rounds</span>
+                <span className="text-brand-600 font-medium tabular-nums">
+                  {results.estimatedRounds}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-mid-gray">Transition hours</span>
+                <span className="text-brand-600 font-medium tabular-nums">
+                  {results.transitionHours.toFixed(1)} h
+                </span>
+              </div>
+              <div className="border-hairline flex justify-between border-t pt-1.5">
+                <span className="text-deep-gray font-medium">Adjusted labour hours</span>
+                <span className="text-brand-600 font-semibold tabular-nums">
+                  {results.adjustedHours.toFixed(1)} h
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-deep-gray font-medium">Shoppers needed</span>
+                <span className="text-brand-600 text-lg font-bold tabular-nums">
+                  {results.shoppersNeeded}
+                </span>
+              </div>
               {results.gap !== 0 && (
-                <div className={`flex justify-between rounded px-2 py-1 ${results.gap > 0 ? 'bg-danger-bg text-danger-text' : 'bg-success-bg text-success-text'}`}>
+                <div
+                  className={`flex justify-between rounded px-2 py-1 ${results.gap > 0 ? 'bg-danger-bg text-danger-text' : 'bg-success-bg text-success-text'}`}
+                >
                   <span>{results.gap > 0 ? 'Staffing gap' : 'Surplus'}</span>
-                  <span className="font-semibold">{results.gap > 0 ? '+' : ''}{results.gap}</span>
+                  <span className="font-semibold tabular-nums">
+                    {results.gap > 0 ? '+' : ''}
+                    {results.gap}
+                  </span>
                 </div>
               )}
-              <div className="flex justify-between"><span className="text-neutral-500">Projected finish</span><span className="font-medium">{results.projectedFinish}</span></div>
+              <div className="flex justify-between">
+                <span className="text-mid-gray">Projected finish</span>
+                <span className="text-brand-600 font-medium tabular-nums">
+                  {results.projectedFinish}
+                </span>
+              </div>
             </div>
           )}
         </div>
       )}
-    </div>
+    </Card>
   );
 }

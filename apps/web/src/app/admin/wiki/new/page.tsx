@@ -3,6 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { RichTextEditor } from '@/components/RichTextEditor';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Card } from '@/components/ui/Card';
+import { Field, inputClass } from '@/components/ui/Field';
+import { PillButton } from '@/components/ui/PillButton';
 
 const articleTypes = [
   { value: 'SOP', label: 'SOP' },
@@ -67,61 +71,87 @@ export default function NewArticlePage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-8">
-      <h1 className="text-2xl font-bold text-neutral-900">New article</h1>
-      <p className="mt-1 text-sm text-neutral-600">Create a new warehouse wiki article with rich content.</p>
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+      <PageHeader
+        title="New article"
+        subtitle="Create a new warehouse wiki article with rich content."
+      />
 
       {error && (
-        <div className="mt-4 rounded-md bg-danger-bg p-3 text-sm text-danger-text">{error}</div>
+        <div className="bg-danger-bg text-danger-text mb-6 rounded-md p-3 text-sm">{error}</div>
       )}
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="sm:col-span-2">
-            <label htmlFor="title" className="text-xs font-medium text-neutral-600">Title</label>
-            <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required
-              className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" />
-          </div>
-        </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <Card padded className="space-y-6">
+          <Field label="Title">
+            <input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              className={inputClass}
+            />
+          </Field>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="articleType" className="text-xs font-medium text-neutral-600">Article type</label>
-            <select id="articleType" value={articleType} onChange={(e) => setArticleType(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
-              {articleTypes.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
-            </select>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Article type">
+              <select
+                id="articleType"
+                value={articleType}
+                onChange={(e) => setArticleType(e.target.value)}
+                className={inputClass}
+              >
+                {articleTypes.map((t) => (
+                  <option key={t.value} value={t.value}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Process area">
+              <select
+                id="processArea"
+                value={processArea}
+                onChange={(e) => setProcessArea(e.target.value)}
+                className={inputClass}
+              >
+                <option value="">— Select process area —</option>
+                {processAreas.map((a) => (
+                  <option key={a.value} value={a.value}>
+                    {a.label}
+                  </option>
+                ))}
+              </select>
+            </Field>
           </div>
-          <div>
-            <label htmlFor="processArea" className="text-xs font-medium text-neutral-600">Process area</label>
-            <select id="processArea" value={processArea} onChange={(e) => setProcessArea(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
-              <option value="">— Select process area —</option>
-              {processAreas.map((a) => <option key={a.value} value={a.value}>{a.label}</option>)}
-            </select>
-          </div>
-        </div>
 
-        <div>
-          <label htmlFor="summary" className="text-xs font-medium text-neutral-600">Summary</label>
-          <textarea id="summary" value={summary} onChange={(e) => setSummary(e.target.value)} rows={2}
-            className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" />
-        </div>
+          <Field label="Summary">
+            <textarea
+              id="summary"
+              value={summary}
+              onChange={(e) => setSummary(e.target.value)}
+              rows={2}
+              className={inputClass}
+            />
+          </Field>
 
-        <div>
-          <label className="text-xs font-medium text-neutral-600">Content</label>
-          <div className="mt-1">
-            <RichTextEditor content={content} onChange={setContent} placeholder="Write your article content here..." />
-          </div>
-        </div>
+          <Field label="Content">
+            <RichTextEditor
+              content={content}
+              onChange={setContent}
+              placeholder="Write your article content here..."
+            />
+          </Field>
+        </Card>
 
         <div className="flex gap-4">
-          <button type="submit" disabled={submitting}
-            className="inline-flex h-11 items-center rounded-md bg-brand-500 px-5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50">
+          <PillButton type="submit" size="lg" disabled={submitting}>
             {submitting ? 'Creating...' : 'Create article'}
-          </button>
-          <a href="/admin/wiki"
-            className="inline-flex h-11 items-center rounded-md border border-neutral-200 bg-white px-5 text-sm font-medium text-neutral-700 hover:bg-neutral-50">
+          </PillButton>
+          <a
+            href="/admin/wiki"
+            className="border-ink/15 bg-paper text-ink hover:bg-cool-wash inline-flex items-center rounded-full border px-6 py-2.5 text-sm font-medium transition-colors"
+          >
             Cancel
           </a>
         </div>

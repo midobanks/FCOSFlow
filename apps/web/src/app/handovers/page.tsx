@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import { getBaseUrl } from '@/lib/base-url';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Card } from '@/components/ui/Card';
+import { StatusPill } from '@/components/ui/StatusPill';
 
 type Handover = {
   id: string;
@@ -26,48 +29,46 @@ export default async function HandoversPage() {
   const handovers = await getHandovers();
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-neutral-900">Shift handovers</h1>
-        <p className="mt-1 text-sm text-neutral-600">View and manage shift handovers.</p>
-      </div>
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+      <PageHeader title="Shift handovers" subtitle="View and manage shift handovers." />
 
       <div className="space-y-3">
         {handovers.length === 0 ? (
-          <div className="rounded-lg border border-neutral-200 bg-white p-8 text-center">
-            <p className="text-neutral-400">No handovers yet.</p>
-          </div>
+          <Card padded={false} className="p-8 text-center">
+            <p className="text-quiet-dot">No handovers yet.</p>
+          </Card>
         ) : (
           handovers.map((h) => (
-            <Link
-              key={h.id}
-              href={`/handovers/${h.id}`}
-              className="block rounded-lg border border-neutral-200 bg-white p-4 transition-colors hover:border-brand-300"
-            >
-              <div className="flex items-start justify-between">
+            <Card key={h.id} padded={false} className="hover:border-brand-300 transition-colors">
+              <Link
+                href={`/handovers/${h.id}`}
+                className="flex items-start justify-between p-5 sm:p-6"
+              >
                 <div>
-                  <h3 className="text-sm font-semibold text-neutral-900">{h.shift.name}</h3>
-                  <p className="mt-1 text-xs text-neutral-500">
+                  <h3 className="text-ink text-sm font-semibold">{h.shift.name}</h3>
+                  <p className="text-mid-gray mt-1 text-xs">
                     Outgoing: {h.outgoingUser.name} &middot;{' '}
                     {new Date(h.shift.startTime).toLocaleDateString('en-GB')}
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={`rounded px-2 py-0.5 text-xs font-medium ${
-                    h.status === 'ACKNOWLEDGED' ? 'bg-success-bg text-success-text'
-                    : h.status === 'SUBMITTED' ? 'bg-warning-bg text-warning-text'
-                    : 'bg-neutral-100 text-neutral-600'
-                  }`}>
-                    {h.status}
-                  </span>
-                  <span className="text-xs text-neutral-400">{h._count.amendments} amendments</span>
+                  <StatusPill
+                    tone={
+                      h.status === 'ACKNOWLEDGED'
+                        ? 'success'
+                        : h.status === 'SUBMITTED'
+                          ? 'warning'
+                          : 'neutral'
+                    }
+                    label={h.status}
+                  />
+                  <span className="text-quiet-dot text-xs">{h._count.amendments} amendments</span>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </Card>
           ))
         )}
       </div>
     </div>
   );
 }
-

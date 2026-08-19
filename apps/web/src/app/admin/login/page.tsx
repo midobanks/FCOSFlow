@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/Logo';
+import { Card } from '@/components/ui/Card';
+import { Field, inputClass } from '@/components/ui/Field';
+import { PillButton } from '@/components/ui/PillButton';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -41,26 +44,38 @@ export default function AdminLoginPage() {
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <Logo width={160} height={42} className="mx-auto" />
-        <h1 className="mt-6 text-center text-lg font-semibold text-neutral-800">Admin sign in</h1>
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          {error && (
-            <div className="rounded-md bg-danger-bg p-3 text-sm text-danger-text">{error}</div>
-          )}
-          <div>
-            <label htmlFor="username" className="text-xs font-medium text-neutral-600">Username</label>
-            <input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required autoFocus
-              className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" />
-          </div>
-          <div>
-            <label htmlFor="password" className="text-xs font-medium text-neutral-600">Password</label>
-            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
-              className="mt-1 block w-full rounded-md border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" />
-          </div>
-          <button type="submit" disabled={loading}
-            className="flex h-11 w-full items-center justify-center rounded-md bg-brand-500 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50">
-            {loading ? 'Signing in...' : 'Sign in'}
-          </button>
-        </form>
+        <h1 className="text-ink mt-6 text-center text-lg font-semibold">Admin sign in</h1>
+        <Card padded className="mt-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="bg-danger-bg text-danger-text rounded-md p-3 text-sm">{error}</div>
+            )}
+            <Field label="Username">
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                autoFocus
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Password">
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className={inputClass}
+              />
+            </Field>
+            <PillButton type="submit" size="lg" className="w-full" disabled={loading}>
+              {loading ? 'Signing in...' : 'Sign in'}
+            </PillButton>
+          </form>
+        </Card>
       </div>
     </div>
   );

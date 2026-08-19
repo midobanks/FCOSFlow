@@ -1,0 +1,11 @@
+.git
+.vercel
+node_modules
+.next
+.turbo
+dist
+*.tsbuildinfo
+.env
+.env.*
+*.log
+.DS_Store
